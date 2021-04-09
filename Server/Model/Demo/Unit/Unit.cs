@@ -11,7 +11,7 @@ namespace ET
 
         [BsonIgnore]
         public UnitConfig Config => UnitConfigCategory.Instance.Get(this.ConfigId);
-
+        
         private Vector3 position; //坐标
 
         public Vector3 Position
@@ -23,6 +23,7 @@ namespace ET
                 Game.EventSystem.Publish(new EventIDType.ChangePosition() { Unit = this }).Coroutine();
             }
         }
+        
 
         [BsonIgnore]
         public Vector3 Forward

@@ -10,6 +10,10 @@ namespace ET
 		{
 			Unit unit = EntityFactory.CreateWithId<Unit, int>(scene, IdGenerater.Instance.GenerateId(), 1001);
 			unit.AddComponent<FrameMoveComponent>();
+			unit.AddComponent<UnitFrameInputComponent>();
+			unit.AddComponent<TransformSyncComponent>();
+			
+			
 			unit.Position = new Vector3(-10, 0, -10);
 			
 			NumericComponent numericComponent = unit.AddComponent<NumericComponent>();

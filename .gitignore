@@ -60,3 +60,8 @@ Server/.DS_Store
 /Unity/Unity.sln.DotSettings.user
 /Unity/Unity.userprefs
 /Unity/UserSettings/EditorUserSettings.asset
+Unity/ProjectSettings/ProjectVersion.txt
+Unity/ProjectSettings/PackageManagerSettings.asset
+Unity/ProjectSettings/PackageManagerSettings.asset
+Unity/ProjectSettings/PackageManagerSettings.asset
+Unity/Packages/packages-lock.json

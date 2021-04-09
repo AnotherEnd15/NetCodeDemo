@@ -9,7 +9,7 @@ namespace ET
 	        Unit unit = EntityFactory.CreateWithId<Unit, int>(domain, unitInfo.UnitId, unitInfo.ConfigId);
 	        unit.Position = new Vector3(unitInfo.X, unitInfo.Y, unitInfo.Z);
 	        
-	        unit.AddComponent<MoveComponent>();
+	        unit.AddComponent<FrameMoveComponent>();
 	        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
 	        for (int i = 0; i < unitInfo.Ks.Count; ++i)
 	        {

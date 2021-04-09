@@ -33,4 +33,9 @@ namespace EventIDType
 		public long Old;
 		public long New;
 	}
+
+	public struct FrameEnd
+	{
+		public Unit unit;
+	}
 }

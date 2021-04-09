@@ -17,7 +17,7 @@ namespace ET
 			Vector3 pos = new Vector3(message.X, message.Y, message.Z);
 			Quaternion rotation = new Quaternion(message.A, message.B, message.C, message.W);
 
-			MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
+			FrameMoveComponent moveComponent = unit.GetComponent<FrameMoveComponent>();
 			moveComponent.Stop();
 			unit.Position = pos;
 			unit.Rotation = rotation;
