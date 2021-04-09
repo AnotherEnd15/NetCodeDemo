@@ -9,7 +9,7 @@ namespace ET
 		protected override async ETTask Run(Scene scene, G2M_CreateUnit request, M2G_CreateUnit response, Action reply)
 		{
 			Unit unit = EntityFactory.CreateWithId<Unit, int>(scene, IdGenerater.Instance.GenerateId(), 1001);
-			unit.AddComponent<MoveComponent>();
+			unit.AddComponent<FrameMoveComponent>();
 			unit.Position = new Vector3(-10, 0, -10);
 			
 			NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
@@ -23,6 +23,7 @@ namespace ET
 			
 			// 把自己广播给周围的人
 			M2C_CreateUnits createUnits = new M2C_CreateUnits();
+			createUnits.Frame = unit.GetCurrFrame();
 			createUnits.Units.Add(UnitHelper.CreateUnitInfo(unit));
 			MessageHelper.Broadcast(unit, createUnits);
 			

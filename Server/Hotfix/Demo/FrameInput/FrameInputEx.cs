@@ -11,6 +11,15 @@ namespace ET
         }
     }
     
+    // [ObjectSystem]
+    // public class FrameInputAwakeSystem: AwakeSystem<FrameInput,int>
+    // {
+    //     public override void Awake(FrameInput self,int frameIndex)
+    //     {
+    //         self.FrameIndex = frameIndex;
+    //     }
+    // }
+    
     public static class FrameInputEx
     {
         public static void Run(this FrameInput self)
@@ -20,16 +29,15 @@ namespace ET
             self.GetComponent<FrameInput_Move>()?.Run(unit);
         }
 
-        public static void CreateFrameInput_Move(this Unit unit, Vector3 Target, List<Vector3> Path)
+        public static void CreateFrameInput_Move(this Unit unit,int frameIndex, Vector3 Target, List<Vector3> Path)
         {
             var com = unit.GetComponent<UnitFrameInputComponent>();
             if(com == null)
                 com =  unit.AddComponent<UnitFrameInputComponent>();
-            var frameInput = EntityFactory.CreateWithParent<FrameInput>(com);
+            var frameInput = com.CreateOrGet(frameIndex);
             var move = frameInput.AddComponent<FrameInput_Move>();
             move.Path.AddRange(Path);
             move.Target = Target;
-            
         }
     }
 }

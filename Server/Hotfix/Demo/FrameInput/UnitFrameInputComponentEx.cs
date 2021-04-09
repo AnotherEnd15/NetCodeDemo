@@ -11,12 +11,22 @@
 
     public static class UnitFrameInputComponentEx
     {
-        public static void Handle(this UnitFrameInputComponent self)
+        public static FrameInput CreateOrGet(this UnitFrameInputComponent self, int frame)
         {
-            foreach (FrameInput v in self.Children.Values)
+            if (!self.Children.TryGetValue(frame,out var Input))
             {
-                v.Run();
+                Input = EntityFactory.CreateWithParentAndId<FrameInput>(self, frame);
             }
+            return Input as FrameInput;
+        }
+
+        public static void Handle(this UnitFrameInputComponent self,int frame)
+        {
+            if (!self.Children.TryGetValue(frame, out var Input))
+            {
+                return;
+            }
+            (Input as FrameInput).Run();
         }
     }
 }

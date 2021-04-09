@@ -5,18 +5,18 @@ using UnityEngine;
 namespace ET
 {
     [ObjectSystem]
-    public class MoveComponentDestroySystem: DestroySystem<MoveComponent>
+    public class MoveComponentDestroySystem: DestroySystem<FrameMoveComponent>
     {
-        public override void Destroy(MoveComponent self)
+        public override void Destroy(FrameMoveComponent self)
         {
             self.Clear();
         }
     }
 
     [ObjectSystem]
-    public class MoveComponentAwakeSystem: AwakeSystem<MoveComponent>
+    public class MoveComponentAwakeSystem: AwakeSystem<FrameMoveComponent>
     {
-        public override void Awake(MoveComponent self)
+        public override void Awake(FrameMoveComponent self)
         {
             self.StartTime = 0;
             self.StartPos = Vector3.zero;
@@ -32,12 +32,12 @@ namespace ET
 
     public static class MoveComponentSystem
     {
-        public static bool IsArrived(this MoveComponent self)
+        public static bool IsArrived(this FrameMoveComponent self)
         {
             return self.Targets.Count == 0;
         }
 
-        public static bool ChangeSpeed(this MoveComponent self, float speed)
+        public static bool ChangeSpeed(this FrameMoveComponent self, float speed)
         {
             if (self.IsArrived())
             {
@@ -65,7 +65,7 @@ namespace ET
             return true;
         }
 
-        public static async ETTask<bool> MoveToAsync(this MoveComponent self, List<Vector3> target, float speed, int turnTime = 100, ETCancellationToken cancellationToken = null)
+        public static async ETTask<bool> MoveToAsync(this FrameMoveComponent self, List<Vector3> target, float speed, int turnTime = 100, ETCancellationToken cancellationToken = null)
         {
             self.Stop();
 
@@ -107,7 +107,7 @@ namespace ET
             return moveRet;
         }
 
-        public static void MoveForward(this MoveComponent self, bool needCancel)
+        public static void MoveForward(this FrameMoveComponent self, bool needCancel)
         {
             Unit unit = self.GetParent<Unit>();
             
@@ -177,7 +177,7 @@ namespace ET
             }
         }
 
-        private static void StartMove(this MoveComponent self)
+        private static void StartMove(this FrameMoveComponent self)
         {
             Unit unit = self.GetParent<Unit>();
             
@@ -199,7 +199,7 @@ namespace ET
             );
         }
 
-        private static void SetNextTarget(this MoveComponent self)
+        private static void SetNextTarget(this FrameMoveComponent self)
         {
 
             Unit unit = self.GetParent<Unit>();
@@ -257,19 +257,19 @@ namespace ET
             }
         }
 
-        private static Vector3 GetFaceV(this MoveComponent self)
+        private static Vector3 GetFaceV(this FrameMoveComponent self)
         {
             return self.NextTarget - self.PreTarget;
         }
 
-        public static bool FlashTo(this MoveComponent self, Vector3 target)
+        public static bool FlashTo(this FrameMoveComponent self, Vector3 target)
         {
             Unit unit = self.GetParent<Unit>();
             unit.Position = target;
             return true;
         }
 
-        public static bool MoveTo(this MoveComponent self, Vector3 target, float speed, int turnTime = 0, bool isTurnHorizontal = false)
+        public static bool MoveTo(this FrameMoveComponent self, Vector3 target, float speed, int turnTime = 0, bool isTurnHorizontal = false)
         {
             if (speed < 0.001)
             {
@@ -289,7 +289,7 @@ namespace ET
             return true;
         }
 
-        public static bool MoveTo(this MoveComponent self, List<Vector3> target, float speed, int turnTime = 0)
+        public static bool MoveTo(this FrameMoveComponent self, List<Vector3> target, float speed, int turnTime = 0)
         {
             if (target.Count == 0)
             {
@@ -318,7 +318,7 @@ namespace ET
             return true;
         }
 
-        public static void Stop(this MoveComponent self)
+        public static void Stop(this FrameMoveComponent self)
         {
             if (self.Targets.Count > 0)
             {
@@ -328,7 +328,7 @@ namespace ET
             self.Clear();
         }
 
-        public static void Clear(this MoveComponent self)
+        public static void Clear(this FrameMoveComponent self)
         {
             self.StartTime = 0;
             self.StartPos = Vector3.zero;

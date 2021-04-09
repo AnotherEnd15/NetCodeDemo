@@ -3,6 +3,21 @@ using ProtoBuf;
 using System.Collections.Generic;
 namespace ET
 {
+	[Message(OuterOpcode.OpVector3)]
+	[ProtoContract]
+	public partial class OpVector3: Object
+	{
+		[ProtoMember(1)]
+		public float X { get; set; }
+
+		[ProtoMember(2)]
+		public float Y { get; set; }
+
+		[ProtoMember(3)]
+		public float Z { get; set; }
+
+	}
+
 	[ResponseType(typeof(M2C_TestResponse))]
 	[Message(OuterOpcode.C2M_TestRequest)]
 	[ProtoContract]
@@ -96,11 +111,6 @@ namespace ET
 		[ProtoMember(1)]
 		public long UnitId { get; set; }
 
-// 所有的unit
-// 所有的unit
-		[ProtoMember(2)]
-		public List<UnitInfo> Units = new List<UnitInfo>();
-
 	}
 
 	[Message(OuterOpcode.UnitInfo)]
@@ -143,6 +153,9 @@ namespace ET
 		[ProtoMember(1)]
 		public List<UnitInfo> Units = new List<UnitInfo>();
 
+		[ProtoMember(2)]
+		public int Frame { get; set; }
+
 	}
 
 	[Message(OuterOpcode.C2M_PathfindingResult)]
@@ -167,11 +180,14 @@ namespace ET
 		[ProtoMember(3)]
 		public float Z { get; set; }
 
+		[ProtoMember(4)]
+		public int Frame { get; set; }
+
 	}
 
-	[Message(OuterOpcode.M2C_PathfindingResult)]
+	[Message(OuterOpcode.M2C_UpdateTransform)]
 	[ProtoContract]
-	public partial class M2C_PathfindingResult: Object, IActorMessage
+	public partial class M2C_UpdateTransform: Object, IActorMessage
 	{
 		[ProtoMember(93)]
 		public long ActorId { get; set; }
@@ -180,22 +196,13 @@ namespace ET
 		public long Id { get; set; }
 
 		[ProtoMember(2)]
-		public float X { get; set; }
+		public int Frame { get; set; }
 
 		[ProtoMember(3)]
-		public float Y { get; set; }
+		public OpVector3 Pos { get; set; }
 
 		[ProtoMember(4)]
-		public float Z { get; set; }
-
-		[ProtoMember(5)]
-		public List<float> Xs = new List<float>();
-
-		[ProtoMember(6)]
-		public List<float> Ys = new List<float>();
-
-		[ProtoMember(7)]
-		public List<float> Zs = new List<float>();
+		public OpVector3 Dir { get; set; }
 
 	}
 
@@ -229,6 +236,9 @@ namespace ET
 
 		[ProtoMember(9)]
 		public float W { get; set; }
+
+		[ProtoMember(10)]
+		public int Frame { get; set; }
 
 	}
 

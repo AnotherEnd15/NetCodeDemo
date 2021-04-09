@@ -6,7 +6,7 @@ namespace ET
     public static class MoveHelper
     {
         // 可以多次调用，多次调用的话会取消上一次的协程
-        public static void FindPathMoveToAsync(this Unit unit, Vector3 target, ETCancellationToken cancellationToken = null)
+        public static void FindPathMoveToAsync(this Unit unit,int FrameIndex, Vector3 target, ETCancellationToken cancellationToken = null)
         {
             float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
             if (speed < 0.001)
@@ -25,19 +25,7 @@ namespace ET
                     unit.SendStop(-2);
                     return;
                 }
-                
-                // 广播寻路路径
-                M2C_PathfindingResult m2CPathfindingResult = new M2C_PathfindingResult();
-                m2CPathfindingResult.Id = unit.Id;
-                for (int i = 0; i < list.List.Count; ++i)
-                {
-                    Vector3 vector3 = list.List[i];
-                    m2CPathfindingResult.Xs.Add(vector3.x);
-                    m2CPathfindingResult.Ys.Add(vector3.y);
-                    m2CPathfindingResult.Zs.Add(vector3.z);
-                }
-                MessageHelper.Broadcast(unit, m2CPathfindingResult);
-                unit.CreateFrameInput_Move(target,path);
+                unit.CreateFrameInput_Move(FrameIndex,target,path);
             }
         }
 
