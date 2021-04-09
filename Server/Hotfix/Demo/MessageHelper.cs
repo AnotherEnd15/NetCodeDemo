@@ -6,11 +6,11 @@ namespace ET
     {
         public static void Broadcast(Unit unit, IActorMessage message)
         {
-            var units = unit.Domain.GetComponent<UnitComponent>().GetAll();
+            var units = unit.Domain.GetComponent<UnitComponent>().idUnits;
 
-            if (units == null) return;
+            if (units.Count == 0) return;
 
-            foreach (Unit u in units)
+            foreach (Unit u in units.Values)
             {
                 UnitGateComponent unitGateComponent = u.GetComponent<UnitGateComponent>();
                 SendActor(unitGateComponent.GateSessionActorId, message);

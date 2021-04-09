@@ -31,8 +31,10 @@ namespace ET
                     scene.AddComponent<GateSessionKeyComponent>();
                     break;
                 case SceneType.Map:
+                    scene.AddComponent<FrameTimerComponent>();
                     scene.AddComponent<UnitComponent>();
                     scene.AddComponent<RecastPathComponent>();
+                    scene.AddComponent<SceneFrameManagerComponent>();
                     break;
                 case SceneType.Location:
                     scene.AddComponent<LocationComponent>();

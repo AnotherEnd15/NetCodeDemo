@@ -10,6 +10,9 @@ namespace ET
 		[BsonElement]
 		[BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
 		public readonly Dictionary<long, Unit> idUnits = new Dictionary<long, Unit>();
+
+		[BsonIgnore]
+		public Dictionary<int, HashSet<Unit>> TypeUnits = new Dictionary<int, HashSet<Unit>>();
 		
 		public int Count
 		{

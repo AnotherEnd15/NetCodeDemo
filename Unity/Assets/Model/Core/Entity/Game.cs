@@ -34,6 +34,8 @@ namespace ET
 
         public static List<Action> FrameFinishCallback = new List<Action>();
 
+        public const int FrameDuration = 50;// 每帧时长,ms
+        
         public static void Update()
         {
             ThreadSynchronizationContext.Update();

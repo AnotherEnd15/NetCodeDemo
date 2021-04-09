@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ET
@@ -23,6 +24,10 @@ namespace ET
         {
             unit.Parent = self;
             self.idUnits.Add(unit.Id, unit);
+            var type = unit.Config.Type;
+            if (!self.TypeUnits.ContainsKey(type))
+                self.TypeUnits[type] = new HashSet<Unit>();
+            self.TypeUnits[type].Add(unit);
         }
 
         public static Unit Get(this UnitComponent self, long id)
@@ -31,22 +36,23 @@ namespace ET
             return unit;
         }
 
-        public static void Remove(this UnitComponent self, long id)
+        public static HashSet<Unit> GetByType(this UnitComponent self, UnitType type)
+        {
+            self.TypeUnits.TryGetValue((int) type, out var v);
+            return v;
+        }
+
+
+        public static void Remove(this UnitComponent self, long id, bool dispose = true)
         {
             Unit unit;
             self.idUnits.TryGetValue(id, out unit);
+            if (unit == null) return;
             self.idUnits.Remove(id);
-            unit?.Dispose();
+            self.TypeUnits[unit.Config.Type].Remove(unit);
+            if (dispose)
+                unit?.Dispose();
         }
-
-        public static void RemoveNoDispose(this UnitComponent self, long id)
-        {
-            self.idUnits.Remove(id);
-        }
-
-        public static Unit[] GetAll(this UnitComponent self)
-        {
-            return self.idUnits.Values.ToArray();
-        }
+        
     }
 }

@@ -28,8 +28,8 @@ namespace ET
 			
 			// 把周围的人通知给自己
 			createUnits.Units.Clear();
-			Unit[] units = scene.GetComponent<UnitComponent>().GetAll();
-			foreach (Unit u in units)
+			var units = scene.GetComponent<UnitComponent>().idUnits;
+			foreach (Unit u in units.Values)
 			{
 				createUnits.Units.Add(UnitHelper.CreateUnitInfo(u));
 			}

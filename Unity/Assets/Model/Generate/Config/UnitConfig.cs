@@ -82,6 +82,8 @@ namespace ET
 		public int Height { get; set; }
 		[ProtoMember(6, IsRequired  = true)]
 		public int Weight { get; set; }
+		[ProtoMember(7, IsRequired  = true)]
+		public int Type { get; set; }
 
 
 		[ProtoAfterDeserialization]
