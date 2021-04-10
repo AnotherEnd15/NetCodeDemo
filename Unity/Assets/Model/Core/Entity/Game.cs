@@ -36,12 +36,9 @@ namespace ET
 
         public static List<Action> FrameFinishCallback = new List<Action>();
 
-#if SERVER
-         public const int FrameDuration = 16 * 3;// 每帧时长,ms 服务器3倍
-#else
-        public const int FrameDuration = 16; // 每帧时长,ms,客户端16ms
-#endif
 
+        public const int ClientFrameDuration = 16; // 每帧时长,ms,客户端16ms
+        public const int ServerFrameDuration = 48; // 每帧时长,ms,服务器
         public static void Update()
         {
             ThreadSynchronizationContext.Update();

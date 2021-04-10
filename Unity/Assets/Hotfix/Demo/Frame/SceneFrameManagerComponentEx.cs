@@ -23,7 +23,7 @@
     {
         public override void Start(SceneFrameManagerComponent self)
         {
-            self.frameTimer = TimerComponent.Instance.NewRepeatedTimer(Game.FrameDuration, self.RunNextFrame);
+            self.frameTimer = TimerComponent.Instance.NewRepeatedTimer(Game.ClientFrameDuration, self.RunNextFrame);
         }
     }
 

@@ -14,7 +14,7 @@
             com.LastServerFrame = serverFrame;
             // 计算模拟的开始帧
             var pingCom = entity.CurrSession().GetComponent<PingComponent>();
-            var deltaFrame = pingCom.Ping / Game.FrameDuration + 1;
+            var deltaFrame = pingCom.Ping / Game.ClientFrameDuration + 1;
             var minSimulateFrame = com.LastServerFrame + (int)deltaFrame;
             if (com.CurrSimulateFrame < minSimulateFrame)
                 com.CurrSimulateFrame = minSimulateFrame;

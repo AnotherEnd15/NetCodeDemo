@@ -14,7 +14,7 @@ namespace ET
 		    return new Vector3() { x = v.X, y = v.Y, z = v.Z };
 	    }
 	    
-        public static Unit Create(Entity domain, UnitInfo unitInfo)
+        public static Unit Create(Entity domain, UnitInfo unitInfo,long myUnitId)
         {
 	        Unit unit = EntityFactory.CreateWithId<Unit, int>(domain, unitInfo.UnitId, unitInfo.ConfigId);
 	        unit.Position = unitInfo.Pos.ToV3();
@@ -28,7 +28,11 @@ namespace ET
 
 	        UnitComponent unitComponent = domain.GetComponent<UnitComponent>();
             unitComponent.Add(unit);
-            
+            if (unitInfo.UnitId == myUnitId)
+            {
+	            unitComponent.MyUnit = unit;
+            }
+
             Game.EventSystem.Publish(new EventIDType.AfterUnitCreate() {Unit = unit});
             return unit;
         }

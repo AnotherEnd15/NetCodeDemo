@@ -215,7 +215,7 @@ namespace ET
 
             self.StartTime += self.NeedTime;
             
-            self.NeedTime = (long) (distance / self.Speed * 1000) / Game.FrameDuration;
+            self.NeedTime = (long) (distance / self.Speed * 1000) / Game.ClientFrameDuration;
 
             
             if (self.TurnTime > 0)
