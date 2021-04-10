@@ -12,12 +12,17 @@ namespace ET
 
             foreach (Unit u in units.Values)
             {
-                UnitGateComponent unitGateComponent = u.GetComponent<UnitGateComponent>();
-                SendActor(unitGateComponent.GateSessionActorId, message);
+                SendClient(unit,message);
             }
         }
-        
-        
+
+        public static void SendClient(Unit unit, IActorMessage msg)
+        {
+            UnitGateComponent unitGateComponent = unit.GetComponent<UnitGateComponent>();
+            SendActor(unitGateComponent.GateSessionActorId, msg);
+        }
+
+
         /// <summary>
         /// 发送协议给ActorLocation
         /// </summary>

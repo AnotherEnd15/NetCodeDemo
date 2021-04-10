@@ -8,10 +8,11 @@ namespace ET
         public static ThreadSynchronizationContext ThreadSynchronizationContext => ThreadSynchronizationContext.Instance;
 
         public static TimeInfo TimeInfo => TimeInfo.Instance;
-        
+
         public static EventSystem EventSystem => EventSystem.Instance;
 
         private static Scene scene;
+
         public static Scene Scene
         {
             get
@@ -20,6 +21,7 @@ namespace ET
                 {
                     return scene;
                 }
+
                 InstanceIdStruct instanceIdStruct = new InstanceIdStruct(Options.Process, 0);
                 scene = EntitySceneFactory.CreateScene(instanceIdStruct.ToLong(), 0, SceneType.Process, "Process");
                 return scene;
@@ -34,15 +36,19 @@ namespace ET
 
         public static List<Action> FrameFinishCallback = new List<Action>();
 
-        public const int FrameDuration = 50;// 每帧时长,ms
-        
+#if SERVER
+         public const int FrameDuration = 16 * 3;// 每帧时长,ms 服务器3倍
+#else
+        public const int FrameDuration = 16; // 每帧时长,ms,客户端16ms
+#endif
+
         public static void Update()
         {
             ThreadSynchronizationContext.Update();
             TimeInfo.Update();
             EventSystem.Update();
         }
-        
+
         public static void LateUpdate()
         {
             EventSystem.LateUpdate();
@@ -54,6 +60,7 @@ namespace ET
             {
                 action.Invoke();
             }
+
             FrameFinishCallback.Clear();
         }
 

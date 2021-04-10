@@ -1,4 +1,7 @@
-﻿namespace ET
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace ET
 {
     public static class UnitHelper
     {
@@ -6,19 +9,27 @@
         {
             UnitInfo unitInfo = new UnitInfo();
             NumericComponent nc = unit.GetComponent<NumericComponent>();
-            unitInfo.X = unit.Position.x;
-            unitInfo.Y = unit.Position.y;
-            unitInfo.Z = unit.Position.z;
+            unitInfo.Pos = unit.Position.ToOpV3();
+            unitInfo.Dir = unit.Forward.ToOpV3();
             unitInfo.UnitId = unit.Id;
             unitInfo.ConfigId = unit.ConfigId;
 
             foreach ((int key, long value) in nc.NumericDic)
             {
-                unitInfo.Ks.Add(key);
-                unitInfo.Vs.Add(value);
+                unitInfo.KVs.Add(new IntLongKV()
+                {
+                    Key = key,
+                    Value = value
+                });
             }
 
             return unitInfo;
         }
+
+        public static List<Unit> GetAOIPlayers(this Unit unit)
+        {
+            return unit.Domain.GetComponent<UnitComponent>().idUnits.Values.ToList();
+        }
+        
     }
 }

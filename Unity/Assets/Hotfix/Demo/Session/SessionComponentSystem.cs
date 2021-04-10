@@ -7,4 +7,12 @@
 			self.Session.Dispose();
 		}
 	}
+
+	public static class SessionHelper
+	{
+		public static Session CurrSession(this Entity entity)
+		{
+			return entity.ZoneScene().GetComponent<SessionComponent>().Session;
+		}
+	}
 }

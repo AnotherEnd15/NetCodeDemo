@@ -7,6 +7,11 @@ message OpVector3
 	float Y = 2;
 	float Z = 3;
 }
+message IntLongKV
+{
+	int32 Key = 1;
+	int64 Value = 2;
+}
 
 //ResponseType M2C_TestResponse
 message C2M_TestRequest // IActorLocationRequest
@@ -58,19 +63,9 @@ message UnitInfo
 {
 	int64 UnitId  = 1;
     int32 ConfigId = 2;
-	float X = 3;
-	float Y = 4;
-	float Z = 5;
-	repeated int32 Ks = 6;
-	repeated int64 Vs = 7;
-}
-
-message M2C_CreateUnits // IActorMessage
-{
-	int32 RpcId = 90;
-	int64 ActorId = 93;
-    repeated UnitInfo Units = 1;
-	int32 Frame = 2;
+	OpVector3 Pos = 3;
+	OpVector3 Dir = 4;
+	repeated IntLongKV KVs = 6;
 }
 
 message C2M_PathfindingResult // IActorLocationMessage
@@ -85,32 +80,42 @@ message C2M_PathfindingResult // IActorLocationMessage
 	int32 Frame = 4;
 }
 
-message M2C_UpdateTransform // IActorMessage
+message UpdateTransformProto
 {
-	int64 ActorId = 93;
-	
-	int64 Id = 1;
-	int32 Frame = 2;
-	OpVector3 Pos = 3;
-	OpVector3 Dir = 4;
+	int64 UnitId = 1;
+	OpVector3 Pos = 2;
+	OpVector3 Dir = 3;
 }
 
-message M2C_Stop // IActorMessage
+message UpdateInputResultProto
 {
-	int32 Error = 1;
-	
-	int64 Id = 2;
-	float X = 3;
-    float Y = 4;
-    float Z = 5;
-    
-    float A = 6;
-    float B = 7;
-    float C = 8;
-    float W = 9;
-	
-	int32 Frame = 10;
+	MoveInputProto Move = 1; 
 }
+
+message MoveInputProto
+{
+	OpVector3 Target = 1;
+	bool Vaild = 2;
+}
+
+message UpdateNumericProto
+{
+	int64 UnitId = 1;
+	repeated IntLongKV Numerics = 2;
+}
+
+message M2C_UpdateFrame // IActorMessage
+{
+	int64 ActorId = 93;
+	int32 Frame = 1;
+	int64 MyUnitId = 2;
+	repeated UpdateTransformProto Transforms = 3; // 周围人更新位置的信息
+	UpdateInputResultProto InputResult = 4; // 自己的输入结果信息
+	repeated UpdateNumericProto Numerics = 5; // 周围人的数值更新信息
+	repeated UnitInfo Units = 6; // 周围人的Unit创建消息
+}
+
+
 
 //ResponseType G2C_Ping
 message C2G_Ping // IRequest

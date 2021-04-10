@@ -4,16 +4,26 @@ namespace ET
 {
     public static class UnitFactory
     {
+	    public static OpVector3 ToOpV3(this Vector3 v)
+	    {
+		    return new OpVector3() { X = v.x, Y = v.y, Z = v.z };
+	    }
+        
+	    public static Vector3 ToV3(this OpVector3 v)
+	    {
+		    return new Vector3() { x = v.X, y = v.Y, z = v.Z };
+	    }
+	    
         public static Unit Create(Entity domain, UnitInfo unitInfo)
         {
 	        Unit unit = EntityFactory.CreateWithId<Unit, int>(domain, unitInfo.UnitId, unitInfo.ConfigId);
-	        unit.Position = new Vector3(unitInfo.X, unitInfo.Y, unitInfo.Z);
+	        unit.Position = unitInfo.Pos.ToV3();
 	        
 	        unit.AddComponent<FrameMoveComponent>();
 	        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
-	        for (int i = 0; i < unitInfo.Ks.Count; ++i)
+	        for (int i = 0; i < unitInfo.KVs.Count; ++i)
 	        {
-		        numericComponent.Set((NumericType)unitInfo.Ks[i], unitInfo.Vs[i]);
+		        numericComponent.Set((NumericType)unitInfo.KVs[i].Key, unitInfo.KVs[i].Value);
 	        }
 
 	        UnitComponent unitComponent = domain.GetComponent<UnitComponent>();

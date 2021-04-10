@@ -25,21 +25,20 @@ namespace ET
 			scene.GetComponent<UnitComponent>().Add(unit);
 			response.UnitId = unit.Id;
 			
-			// 把自己广播给周围的人
-			M2C_CreateUnits createUnits = new M2C_CreateUnits();
-			createUnits.Frame = unit.GetCurrFrame();
-			createUnits.Units.Add(UnitHelper.CreateUnitInfo(unit));
-			MessageHelper.Broadcast(unit, createUnits);
-			
-			// 把周围的人通知给自己
-			createUnits.Units.Clear();
+			// 周围单位告诉自己
+			var myDirtyCom = unit.AddComponent<UnitDiryDataComponent>();
 			var units = scene.GetComponent<UnitComponent>().idUnits;
 			foreach (Unit u in units.Values)
 			{
-				createUnits.Units.Add(UnitHelper.CreateUnitInfo(u));
+				myDirtyCom.Units.Add(UnitHelper.CreateUnitInfo(u));
 			}
-			MessageHelper.SendActor(unit.GetComponent<UnitGateComponent>().GateSessionActorId, createUnits);
-
+			
+			// 把自己告诉周围玩家
+			foreach (var v in unit.GetAOIPlayers())
+			{
+				v.GetComponent<UnitDiryDataComponent>().Units.Add(UnitHelper.CreateUnitInfo(unit));
+			}
+			
 			reply();
 		}
 	}

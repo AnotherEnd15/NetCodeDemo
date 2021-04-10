@@ -2,8 +2,11 @@
 
 namespace ET
 {
+    // 客户端自己的预表现
     public class UnitFrameInputComponent : Entity
     {
-        // Childern存储帧输入,没收到这一帧输入的时候,每帧开始就模拟最后一次的输入
+        // 使用一个环形list来处理缓存的帧输入,最大缓存一定帧数(和服务器确定帧相差到达一定程度后就不模拟了)
+        public CircularList<FrameInput> AllInputs = new CircularList<FrameInput>(60);
+        public int LastServerFrame; // 最后一个服务器确定的帧
     }
 }

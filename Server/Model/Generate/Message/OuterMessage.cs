@@ -18,6 +18,18 @@ namespace ET
 
 	}
 
+	[Message(OuterOpcode.IntLongKV)]
+	[ProtoContract]
+	public partial class IntLongKV: Object
+	{
+		[ProtoMember(1)]
+		public int Key { get; set; }
+
+		[ProtoMember(2)]
+		public long Value { get; set; }
+
+	}
+
 	[ResponseType(typeof(M2C_TestResponse))]
 	[Message(OuterOpcode.C2M_TestRequest)]
 	[ProtoContract]
@@ -124,37 +136,13 @@ namespace ET
 		public int ConfigId { get; set; }
 
 		[ProtoMember(3)]
-		public float X { get; set; }
+		public OpVector3 Pos { get; set; }
 
 		[ProtoMember(4)]
-		public float Y { get; set; }
-
-		[ProtoMember(5)]
-		public float Z { get; set; }
+		public OpVector3 Dir { get; set; }
 
 		[ProtoMember(6)]
-		public List<int> Ks = new List<int>();
-
-		[ProtoMember(7)]
-		public List<long> Vs = new List<long>();
-
-	}
-
-	[Message(OuterOpcode.M2C_CreateUnits)]
-	[ProtoContract]
-	public partial class M2C_CreateUnits: Object, IActorMessage
-	{
-		[ProtoMember(90)]
-		public int RpcId { get; set; }
-
-		[ProtoMember(93)]
-		public long ActorId { get; set; }
-
-		[ProtoMember(1)]
-		public List<UnitInfo> Units = new List<UnitInfo>();
-
-		[ProtoMember(2)]
-		public int Frame { get; set; }
+		public List<IntLongKV> KVs = new List<IntLongKV>();
 
 	}
 
@@ -185,60 +173,78 @@ namespace ET
 
 	}
 
-	[Message(OuterOpcode.M2C_UpdateTransform)]
+	[Message(OuterOpcode.UpdateTransformProto)]
 	[ProtoContract]
-	public partial class M2C_UpdateTransform: Object, IActorMessage
+	public partial class UpdateTransformProto: Object
+	{
+		[ProtoMember(1)]
+		public long UnitId { get; set; }
+
+		[ProtoMember(2)]
+		public OpVector3 Pos { get; set; }
+
+		[ProtoMember(3)]
+		public OpVector3 Dir { get; set; }
+
+	}
+
+	[Message(OuterOpcode.UpdateInputResultProto)]
+	[ProtoContract]
+	public partial class UpdateInputResultProto: Object
+	{
+		[ProtoMember(1)]
+		public MoveInputProto Move { get; set; }
+
+	}
+
+	[Message(OuterOpcode.MoveInputProto)]
+	[ProtoContract]
+	public partial class MoveInputProto: Object
+	{
+		[ProtoMember(1)]
+		public OpVector3 Target { get; set; }
+
+		[ProtoMember(2)]
+		public bool Vaild { get; set; }
+
+	}
+
+	[Message(OuterOpcode.UpdateNumericProto)]
+	[ProtoContract]
+	public partial class UpdateNumericProto: Object
+	{
+		[ProtoMember(1)]
+		public long UnitId { get; set; }
+
+		[ProtoMember(2)]
+		public List<IntLongKV> Numerics = new List<IntLongKV>();
+
+	}
+
+	[Message(OuterOpcode.M2C_UpdateFrame)]
+	[ProtoContract]
+	public partial class M2C_UpdateFrame: Object, IActorMessage
 	{
 		[ProtoMember(93)]
 		public long ActorId { get; set; }
 
 		[ProtoMember(1)]
-		public long Id { get; set; }
-
-		[ProtoMember(2)]
 		public int Frame { get; set; }
 
-		[ProtoMember(3)]
-		public OpVector3 Pos { get; set; }
-
-		[ProtoMember(4)]
-		public OpVector3 Dir { get; set; }
-
-	}
-
-	[Message(OuterOpcode.M2C_Stop)]
-	[ProtoContract]
-	public partial class M2C_Stop: Object, IActorMessage
-	{
-		[ProtoMember(1)]
-		public int Error { get; set; }
-
 		[ProtoMember(2)]
-		public long Id { get; set; }
+		public long MyUnitId { get; set; }
 
 		[ProtoMember(3)]
-		public float X { get; set; }
+		public List<UpdateTransformProto> Transforms = new List<UpdateTransformProto>();
 
 		[ProtoMember(4)]
-		public float Y { get; set; }
+		public UpdateInputResultProto InputResult { get; set; }
 
 		[ProtoMember(5)]
-		public float Z { get; set; }
+		public List<UpdateNumericProto> Numerics = new List<UpdateNumericProto>();
 
 		[ProtoMember(6)]
-		public float A { get; set; }
-
-		[ProtoMember(7)]
-		public float B { get; set; }
-
-		[ProtoMember(8)]
-		public float C { get; set; }
-
-		[ProtoMember(9)]
-		public float W { get; set; }
-
-		[ProtoMember(10)]
-		public int Frame { get; set; }
+		public List<UnitInfo> Units = new List<UnitInfo>();
 
 	}
 

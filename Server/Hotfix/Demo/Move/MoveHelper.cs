@@ -11,7 +11,7 @@ namespace ET
             float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
             if (speed < 0.001)
             {
-                unit.SendStop(-1);
+                unit.GetComponent<FrameInputResultComponent>().SetMove(false,default);
                 return;
             }
             
@@ -22,28 +22,13 @@ namespace ET
                 List<Vector3> path = list.List;
                 if (path.Count < 2)
                 {
-                    unit.SendStop(-2);
+                    unit.GetComponent<FrameInputResultComponent>().SetMove(false,default);
                     return;
                 }
                 unit.CreateFrameInput_Move(FrameIndex,target,path);
+                unit.GetComponent<FrameInputResultComponent>().SetMove(true,target);
             }
         }
-
-        public static void SendStop(this Unit unit, int error)
-        {
-            MessageHelper.Broadcast(unit, new M2C_Stop()
-            {
-                Error = error,
-                Id = unit.Id, 
-                X = unit.Position.x,
-                Y = unit.Position.y,
-                Z = unit.Position.z,
-						
-                A = unit.Rotation.x,
-                B = unit.Rotation.y,
-                C = unit.Rotation.z,
-                W = unit.Rotation.w,
-            });
-        }
+        
     }
 }
