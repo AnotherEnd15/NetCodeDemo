@@ -8,6 +8,11 @@ namespace ET
         // 可以多次调用，多次调用的话会取消上一次的协程
         public static void FindPathMoveToAsync(this Unit unit,int FrameIndex, Vector3 target, ETCancellationToken cancellationToken = null)
         {
+            if (FrameIndex < unit.GetCurrFrame())
+            {
+                unit.GetComponent<FrameInputResultComponent>().SetMove(false,default);
+                return;
+            }
             float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
             if (speed < 0.001)
             {

@@ -8,10 +8,8 @@ namespace ET
 	{
 		protected override async ETTask Run(Unit unit, C2M_PathfindingResult message)
 		{
-			Vector3 target = new Vector3(message.X, message.Y, message.Z);
-
+			Vector3 target = message.Target.ToV3();
 			unit.FindPathMoveToAsync(message.Frame,target);
-			
 			await ETTask.CompletedTask;
 		}
 	}

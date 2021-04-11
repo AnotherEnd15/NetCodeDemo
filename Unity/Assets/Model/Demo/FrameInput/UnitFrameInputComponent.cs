@@ -6,7 +6,7 @@ namespace ET
     public class UnitFrameInputComponent : Entity
     {
         // 使用一个环形list来处理缓存的帧输入,最大缓存一定帧数(和服务器确定帧相差到达一定程度后就不模拟了)
-        public CircularList<FrameInput> AllInputs = new CircularList<FrameInput>(60);
+        public CircularList<FrameInput> AllInputs = new CircularList<FrameInput>(SceneFrameManagerComponent.MaxForecastFrame + 1); // 多一帧是确定的帧
         public int LastServerFrame; // 最后一个服务器确定的帧
     }
 }

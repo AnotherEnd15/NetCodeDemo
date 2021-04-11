@@ -1,4 +1,7 @@
-﻿namespace ET
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace ET
 {
     [ObjectSystem]
     public class UnitFrameInputComponentDestroySystem: DestroySystem<UnitFrameInputComponent>
@@ -27,6 +30,16 @@
                 return;
             }
             (Input as FrameInput).Run();
+        }
+
+        public static FrameInput CreateInput_Move(this UnitFrameInputComponent self,Vector3 target,List<Vector3> path)
+        {
+            int frame = self.GetCurrSimulateFrame() + 1;
+            var frameInput = self.CreateOrGet(frame);
+            var move = frameInput.AddComponent<FrameInput_Move>();
+            move.Target = target;
+            move.Path.AddRange(path);
+            return frameInput;
         }
     }
 }

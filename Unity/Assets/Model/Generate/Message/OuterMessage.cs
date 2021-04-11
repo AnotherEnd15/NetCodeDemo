@@ -156,19 +156,10 @@ namespace ET
 		[ProtoMember(93)]
 		public long ActorId { get; set; }
 
-		[ProtoMember(94)]
-		public long Id { get; set; }
-
 		[ProtoMember(1)]
-		public float X { get; set; }
+		public OpVector3 Target { get; set; }
 
 		[ProtoMember(2)]
-		public float Y { get; set; }
-
-		[ProtoMember(3)]
-		public float Z { get; set; }
-
-		[ProtoMember(4)]
 		public int Frame { get; set; }
 
 	}

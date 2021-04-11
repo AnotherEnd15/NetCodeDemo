@@ -65,7 +65,7 @@ namespace ET
             return true;
         }
 
-        public static async ETTask<bool> MoveToAsync(this FrameMoveComponent self, List<Vector3> target, float speed, int turnTime = 100, ETCancellationToken cancellationToken = null)
+        public static async ETTask<bool> MoveToAsync(this FrameMoveComponent self, List<Vector3> target, float speed, bool isSimulate =false,int frameTime = 0, int turnTime = 100, ETCancellationToken cancellationToken = null)
         {
             self.Stop();
 
@@ -77,6 +77,12 @@ namespace ET
             self.IsTurnHorizontal = true;
             self.TurnTime = turnTime;
             self.Speed = speed;
+            if (isSimulate)
+            {
+                self.StartMove(isSimulate,frameTime);
+                return true;
+            }
+
             ETTaskCompletionSource<bool> tcs = new ETTaskCompletionSource<bool>();
             self.Callback = (ret) => { tcs.SetResult(ret); };
 
@@ -107,11 +113,13 @@ namespace ET
             return moveRet;
         }
 
-        public static void MoveForward(this FrameMoveComponent self, bool needCancel)
+        public static void MoveForward(this FrameMoveComponent self, bool needCancel,long frameTime = 0)
         {
             Unit unit = self.GetParent<Unit>();
-            
-            long timeNow = self.GetCurrSimulateFrame();
+
+            if (frameTime == 0)
+                frameTime = self.GetCurrSimulateFrame();
+            long timeNow = frameTime;
             long moveTime = timeNow - self.StartTime;
 
             while (true)
@@ -177,14 +185,15 @@ namespace ET
             }
         }
 
-        private static void StartMove(this FrameMoveComponent self)
+        private static void StartMove(this FrameMoveComponent self,bool simulate = false,long startTime = 0)
         {
             Unit unit = self.GetParent<Unit>();
-            
-            self.BeginTime = self.GetCurrSimulateFrame();
+            if (startTime == 0)
+                startTime = self.GetCurrSimulateFrame();
+            self.BeginTime = startTime;
             self.StartTime = self.BeginTime;
             self.SetNextTarget();
-
+            if (simulate) return;
             self.MoveTimer = self.Domain.GetComponent<FrameTimerComponent>().NewRepeatedFrameTimer(1,() =>
                     {
                         try

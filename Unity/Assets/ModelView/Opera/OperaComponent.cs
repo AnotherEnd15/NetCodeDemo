@@ -1,6 +1,7 @@
 ﻿using System;
 
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace ET
 {
@@ -10,6 +11,6 @@ namespace ET
 
 	    public int mapMask;
 
-	    public readonly C2M_PathfindingResult frameClickMap = new C2M_PathfindingResult();
+	    public NavMeshPath Path;
     }
 }

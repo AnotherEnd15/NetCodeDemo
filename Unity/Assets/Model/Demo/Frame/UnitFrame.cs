@@ -6,5 +6,6 @@ namespace ET
     public class UnitFrame : Entity
     {
         public Vector3 Pos;
+        public Vector3 Dir;
     }
 }

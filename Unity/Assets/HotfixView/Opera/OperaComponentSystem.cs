@@ -1,21 +1,33 @@
 using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace ET
 {
+    [ObjectSystem]
     public class OperaComponentAwakeSystem : AwakeSystem<OperaComponent>
     {
         public override void Awake(OperaComponent self)
         {
             self.mapMask = LayerMask.GetMask("Map");
+            self.Path = new NavMeshPath();
         }
     }
-
+    [ObjectSystem]
     public class OperaComponentUpdateSystem : UpdateSystem<OperaComponent>
     {
         public override void Update(OperaComponent self)
         {
             self.Update();
+        }
+    }
+    [ObjectSystem]
+    public class OperaComponentDestroySystem : DestroySystem<OperaComponent>
+    {
+        public override void Destroy(OperaComponent self)
+        {
+            self.Path = null;
         }
     }
     
@@ -25,34 +37,23 @@ namespace ET
         {
             if (Input.GetMouseButtonDown(1))
             {
+                var unit = self.Domain.GetComponent<UnitComponent>().MyUnit;
+                if (unit == null) return;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 1000, self.mapMask))
                 {
                     self.ClickPoint = hit.point;
-                    self.frameClickMap.X = self.ClickPoint.x;
-                    self.frameClickMap.Y = self.ClickPoint.y;
-                    self.frameClickMap.Z = self.ClickPoint.z;
-                    self.DomainScene().GetComponent<SessionComponent>().Session.Send(self.frameClickMap);
+                    self.Path.ClearCorners();
+                    UnityEngine.AI.NavMesh.CalculatePath(unit.Position, self.ClickPoint, NavMesh.AllAreas, self.Path);
+                    if (self.Path.corners == null
+                        || self.Path.corners.Length <= 1)
+                        return;
+                    unit.GetComponent<UnitFrameInputComponent>().CreateInput_Move(self.Path.corners[0], self.Path.corners.ToList());
 
-                    // 测试actor rpc消息
-                    self.TestActor().Coroutine();
                 }
             }
         }
-
-        public static async ETVoid TestActor(this OperaComponent self)
-        {
-            try
-            {
-                M2C_TestActorResponse response = (M2C_TestActorResponse)await self.Domain.GetComponent<SessionComponent>().Session.Call(
-                    new C2M_TestActorRequest() { Info = "actor rpc request" });
-                Log.Info(response.Info);
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
-        }
+        
     }
 }
