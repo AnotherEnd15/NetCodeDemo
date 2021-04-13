@@ -11,8 +11,9 @@ namespace ET
 			Unit unit = EntityFactory.CreateWithId<Unit, int>(scene, IdGenerater.Instance.GenerateId(), 1001);
 			unit.AddComponent<FrameMoveComponent>();
 			unit.AddComponent<UnitFrameInputComponent>();
+			unit.AddComponent<FrameInputResultComponent>();
 			unit.AddComponent<TransformSyncComponent>();
-			
+			var myDirtyCom = unit.AddComponent<UnitDiryDataComponent>();
 			
 			unit.Position = new Vector3(-10, 0, -10);
 			
@@ -26,7 +27,7 @@ namespace ET
 			response.UnitId = unit.Id;
 			
 			// 周围单位告诉自己
-			var myDirtyCom = unit.AddComponent<UnitDiryDataComponent>();
+
 			var units = scene.GetComponent<UnitComponent>().idUnits;
 			foreach (Unit u in units.Values)
 			{
@@ -36,6 +37,7 @@ namespace ET
 			// 把自己告诉周围玩家
 			foreach (var v in unit.GetAOIPlayers())
 			{
+				if(v.Id == unit.Id) continue;
 				v.GetComponent<UnitDiryDataComponent>().Units.Add(UnitHelper.CreateUnitInfo(unit));
 			}
 			

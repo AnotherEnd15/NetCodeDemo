@@ -1,3 +1,5 @@
+using MongoDB.Bson.Serialization.Conventions;
+
 namespace ET
 {
     public static class SceneHelper
@@ -9,7 +11,8 @@ namespace ET
 
         public static Scene DomainScene(this Entity entity)
         {
-            return (Scene) entity.Domain;
+            var scene = (Scene) entity.Domain;
+            return scene;
         }
     }
 }

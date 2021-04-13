@@ -29,6 +29,10 @@ namespace ET
         {
             _capacity = capacity;
             this._list = new T[_capacity];
+            for (int i = 0; i < capacity; i++)
+            {
+                this._list[i] = default (T);
+            }
         }
 
 

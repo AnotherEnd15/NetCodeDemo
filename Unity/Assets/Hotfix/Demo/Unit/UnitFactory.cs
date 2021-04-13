@@ -18,8 +18,14 @@ namespace ET
         {
 	        Unit unit = EntityFactory.CreateWithId<Unit, int>(domain, unitInfo.UnitId, unitInfo.ConfigId);
 	        unit.Position = unitInfo.Pos.ToV3();
-	        
+	        bool isMyUnit = unitInfo.UnitId == myUnitId;
 	        unit.AddComponent<FrameMoveComponent>();
+	        if (isMyUnit)
+	        {
+		        unit.AddComponent<UnitFrameInputComponent>();
+		        unit.AddComponent<UnitFrameRecordComponent>();
+	        }
+
 	        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
 	        for (int i = 0; i < unitInfo.KVs.Count; ++i)
 	        {
@@ -28,7 +34,7 @@ namespace ET
 
 	        UnitComponent unitComponent = domain.GetComponent<UnitComponent>();
             unitComponent.Add(unit);
-            if (unitInfo.UnitId == myUnitId)
+            if (isMyUnit)
             {
 	            unitComponent.MyUnit = unit;
             }

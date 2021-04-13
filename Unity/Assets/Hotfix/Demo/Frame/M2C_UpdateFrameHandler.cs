@@ -8,12 +8,13 @@ namespace ET
         protected override async ETVoid Run(Session session, M2C_UpdateFrame message)
         {
             var clientFrame = message.Frame * Game.ServerFrameDuration / Game.ClientFrameDuration;
-            FrameTimeHelper.SetServerFrame(session,clientFrame);
+            FrameTimeHelper.SetServerFrame(session, clientFrame);
 
             var com = session.ZoneScene().GetComponent<SceneDirtyDataComponent>();
             com.Units.AddRange(message.Units);
             com.Transforms.AddRange(message.Transforms);
-            com.MoveInputResult = message.InputResult.Move;
+            if (message.InputResult != null)
+                com.MoveInputResult = message.InputResult.Move;
             com.MyUnitId = message.MyUnitId;
             await ETTask.CompletedTask;
         }

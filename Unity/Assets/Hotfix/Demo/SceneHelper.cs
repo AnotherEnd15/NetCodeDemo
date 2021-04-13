@@ -1,4 +1,4 @@
-namespace ET
+﻿namespace ET
 {
     public static class SceneFactory
     {
@@ -9,6 +9,7 @@ namespace ET
             zoneScene.AddComponent<NetKcpComponent>();
             zoneScene.AddComponent<UnitComponent>();
             zoneScene.AddComponent<SceneDirtyDataComponent>();
+            zoneScene.AddComponent<SceneFrameManagerComponent>();
             
             // UI层的初始化
             await Game.EventSystem.Publish(new EventIDType.AfterCreateZoneScene() {ZoneScene = zoneScene});

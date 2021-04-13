@@ -35,6 +35,7 @@ namespace ET
     {
         public static void RunNextFrame(this SceneFrameManagerComponent self)
         {
+            if (self.LastServerFrame == 0) return;
             var com = self.ZoneScene().GetComponent<SceneDirtyDataComponent>();
             //1. 先创建Unit
             foreach (var v in com.Units)
@@ -50,9 +51,9 @@ namespace ET
                 if (v.UnitId != com.MyUnitId)
                 {
                     if (v.Pos != null)
-                        unit.Position = v.Pos.ToV3(); //todo: 做内插值
+                        unit.MoveToAsync(v.Pos.ToV3()).Coroutine();
                     if (v.Dir != null)
-                        unit.Forward = v.Dir.ToV3(); // todo: 做内插值
+                        unit.Forward = v.Dir.ToV3(); // 角度先暂时直接转向吧
                     recordPos = unit.Position;
                     recordDir = unit.Forward;
                 }

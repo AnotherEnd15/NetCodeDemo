@@ -255,12 +255,6 @@ namespace ET
         /// </summary>
         private long NewRepeatedTimerInner(long time, Action action)
         {
-#if NOT_CLIENT
-			if (time < 100)
-			{
-				throw new Exception($"repeated timer < 100, timerType: time: {time}");
-			}
-#endif
             long tillTime = TimeHelper.ServerNow() + time;
             TimerAction timer = EntityFactory.CreateWithParent<TimerAction, TimerClass, long, object>(this, TimerClass.RepeatedTimer, time, action, true);
             this.AddTimer(tillTime, timer);

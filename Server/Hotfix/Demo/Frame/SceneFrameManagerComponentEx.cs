@@ -34,7 +34,10 @@
             self.CurrFrame++;
             //1.从输入缓冲区中获取所有人的当前输入并处理, 
             //todo 本地模拟的时候是提前模拟的 (提前1/2 RTT + 1帧),所以这里应该能找到当前帧的输入,找不到就忽略(或者考虑复制之前的输入)
-            foreach (var v in self.Domain.GetComponent<UnitComponent>().GetByType( UnitType.Player))
+            
+            var allPlayers = self.DomainScene().GetComponent<UnitComponent>().GetByType(UnitType.Player);
+            if (allPlayers == null) return;
+            foreach (var v in allPlayers)
             {
                 v.GetComponent<UnitFrameInputComponent>().Handle(self.CurrFrame);
             }
@@ -49,7 +52,9 @@
             }
 
             //4 推送数据给玩家
-            foreach (var v in self.Domain.GetComponent<UnitComponent>().GetByType( UnitType.Player))
+            allPlayers = self.Domain.GetComponent<UnitComponent>().GetByType(UnitType.Player);
+            if (allPlayers == null) return;
+            foreach (var v in allPlayers)
             {
                 v.GetComponent<UnitDiryDataComponent>().Handle(self.CurrFrame);
             }
