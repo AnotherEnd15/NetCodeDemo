@@ -36,7 +36,6 @@ namespace ET
         public static void RunNextFrame(this SceneFrameManagerComponent self)
         {
             if (self.LastServerFrame == 0) return;
-            Log.Debug("当前帧 "+self.LastServerFrame.ToString());
             var com = self.ZoneScene().GetComponent<SceneDirtyDataComponent>();
             com.Handle();
             var myUnit = self.Domain.GetComponent<UnitComponent>().MyUnit;

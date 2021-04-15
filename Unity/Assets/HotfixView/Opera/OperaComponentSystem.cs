@@ -43,12 +43,14 @@ namespace ET
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 1000, self.mapMask))
                 {
+                    Log.Debug("点击了地板 " + hit.point.ToString());
                     self.ClickPoint = hit.point;
                     self.Path.ClearCorners();
                     UnityEngine.AI.NavMesh.CalculatePath(unit.Position, self.ClickPoint, NavMesh.AllAreas, self.Path);
                     if (self.Path.corners == null
                         || self.Path.corners.Length <= 1)
                         return;
+                    Log.Debug("创建输入 " + self.Path.corners.Length);
                     unit.GetComponent<UnitFrameInputComponent>().CreateInput_Move(self.Path.corners[0], self.Path.corners.ToList());
 
                 }

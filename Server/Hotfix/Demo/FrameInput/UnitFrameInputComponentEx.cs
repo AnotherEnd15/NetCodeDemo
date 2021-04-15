@@ -5,6 +5,7 @@
     {
         public override void Destroy(UnitFrameInputComponent self)
         {
+            self.AllInputs.Clear();
         }
     }
     
@@ -27,6 +28,12 @@
                 return;
             }
             (Input as FrameInput).Run();
+        }
+
+        public static bool CheckCanAdd(this UnitFrameInputComponent self, int frame)
+        {
+            if (frame - self.GetCurrFrame() >= self.AllInputs.Capacity) return false;
+            return true;
         }
     }
 }

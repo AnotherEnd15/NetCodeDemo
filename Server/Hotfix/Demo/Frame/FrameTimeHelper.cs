@@ -6,5 +6,10 @@
         {
             return entity.Domain.GetComponent<SceneFrameManagerComponent>().CurrFrame;
         }
+
+        public static int ClientFrame2ServerFrame(long clientFrame)
+        {
+            return (int) (clientFrame * Game.ClientFrameDuration / Game.ServerFrameDuration);
+        }
     }
 }

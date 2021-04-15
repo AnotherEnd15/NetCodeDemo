@@ -35,6 +35,7 @@ namespace ET
             if(com == null)
                 com =  unit.AddComponent<UnitFrameInputComponent>();
             var frameInput = com.CreateOrGet(frameIndex);
+            com.AllInputs[frameIndex] = frameInput;
             var move = frameInput.AddComponent<FrameInput_Move>();
             move.Path.AddRange(Path);
             move.Target = Target;

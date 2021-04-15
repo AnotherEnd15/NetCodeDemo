@@ -30,6 +30,10 @@
       <Link>Core\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Compile>
 
+    <Compile Include="..\..\Unity\Assets\Model\Demo\CircularList.cs">
+      <Link>Demo\CircularList.cs</Link>
+    </Compile>
+
     <Compile Include="..\..\Unity\Assets\Model\Demo\Unit\UnitType.cs">
       <Link>Demo\Unit\UnitType.cs</Link>
     </Compile>
