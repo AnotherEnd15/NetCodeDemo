@@ -28,6 +28,7 @@ namespace ET
         {
             var msg = new M2C_UpdateFrame();
             msg.Frame = CurrFrame;
+            msg.MyUnitId = self.GetParent<Unit>().Id;
             msg.Transforms.AddRange(self.Transforms);
             msg.Numerics.AddRange(self.Numerics);
             if (self.MoveInputResultProto != null)

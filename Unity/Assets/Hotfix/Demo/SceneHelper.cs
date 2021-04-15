@@ -10,7 +10,7 @@
             zoneScene.AddComponent<UnitComponent>();
             zoneScene.AddComponent<SceneDirtyDataComponent>();
             zoneScene.AddComponent<SceneFrameManagerComponent>();
-            
+            zoneScene.AddComponent<FrameTimerComponent>();
             // UI层的初始化
             await Game.EventSystem.Publish(new EventIDType.AfterCreateZoneScene() {ZoneScene = zoneScene});
             

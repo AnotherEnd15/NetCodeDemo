@@ -6,7 +6,7 @@ namespace ET
     {
         public List<UnitInfo> Units = new List<UnitInfo>();
         public List<UpdateTransformProto> Transforms = new List<UpdateTransformProto>();
-        public MoveInputProto MoveInputResult = new MoveInputProto();
+        public MoveInputProto MoveInputResult;
         public long MyUnitId;
     }
 }

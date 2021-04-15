@@ -6,6 +6,11 @@
         {
             return entity.Domain.GetComponent<SceneFrameManagerComponent>().CurrSimulateFrame;
         }
+        
+        public static int GetLastServerFrame(this Entity entity)
+        {
+            return entity.Domain.GetComponent<SceneFrameManagerComponent>().LastServerFrame;
+        }
 
         public static void SetServerFrame(Entity entity,int serverFrame)
         {
