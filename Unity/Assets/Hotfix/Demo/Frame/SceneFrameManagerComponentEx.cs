@@ -38,20 +38,18 @@ namespace ET
             if (self.LastServerFrame == 0) return;
             var com = self.ZoneScene().GetComponent<SceneDirtyDataComponent>();
             com.Handle();
+            // 驱动帧时间组件刷新, 世界状态进行变化
+            self.Domain.GetComponent<FrameTimerComponent>().Update(self.LastServerFrame);
             var myUnit = self.Domain.GetComponent<UnitComponent>().MyUnit;
             bool needForecast = self.CurrSimulateFrame < self.LastServerFrame + SceneFrameManagerComponent.MaxForecastFrame;
+            //Log.Debug(self.LastServerFrame +"   "+self.CurrSimulateFrame);
             //最多模拟帧数
             if (needForecast)
             {
                 self.CurrSimulateFrame++;
-                //6. 驱动帧时间组件刷新, 世界状态进行变化
-                self.Domain.GetComponent<FrameTimerComponent>().Update(self.CurrSimulateFrame);
                 //7. 从输入缓冲区中获取自己的输入.然后模拟执行
-                var input = myUnit.GetComponent<UnitFrameInputComponent>().AllInputs[self.CurrSimulateFrame];
-                if (input != null)
-                {
-                    input.Run();
-                }
+                myUnit.GetComponent<UnitFrameInputComponent>().Handle(self.CurrSimulateFrame);
+                myUnit.GetComponent<FrameMoveComponent>()?.RunNext(self.CurrSimulateFrame);
             }
 
         }

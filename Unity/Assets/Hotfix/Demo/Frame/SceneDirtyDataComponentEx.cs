@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using MongoDB.Bson.Serialization.Serializers;
+using UnityEditor.UI;
+using UnityEngine;
 
 namespace ET
 {
@@ -21,71 +23,82 @@ namespace ET
                 UnitFactory.Create(com.Domain, v, com.MyUnitId);
             }
             com.Units.Clear();
-            //2.更新状态
-            foreach (var v in com.Transforms)
+            var myUnit = com.Domain.GetComponent<UnitComponent>().MyUnit;
+            if (com.Transforms.Count > 0)
             {
-                var unit = com.Domain.GetComponent<UnitComponent>().Get(v.UnitId);
-                Vector3 recordPos = unit.Position;
-                Vector3 recordDir = unit.Forward;
-                if (v.UnitId != com.MyUnitId)
+                //2.更新状态
+                foreach (var v in com.Transforms)
                 {
-                    if (v.Pos != null)
-                        unit.MoveToAsync(v.Pos.ToV3()).Coroutine();
-                    if (v.Dir != null)
-                        unit.Forward = v.Dir.ToV3(); // 角度先暂时直接转向吧
-                    recordPos = unit.Position;
-                    recordDir = unit.Forward;
+                    var unit = com.Domain.GetComponent<UnitComponent>().Get(v.UnitId);
+                    Vector3 recordPos = unit.Position;
+                    Vector3 recordDir = unit.Forward;
+                    if (v.UnitId != com.MyUnitId)
+                    {
+                        if (v.Pos != null)
+                            unit.GetComponent<TransformUpdateComponent>().SetPosTarget(v.Pos.ToV3());
+                        if (v.Dir != null)
+                            unit.Forward = v.Dir.ToV3(); // 角度先暂时直接转向吧
+                        recordPos = unit.Position;
+                        recordDir = unit.Forward;
+                    }
+                    else
+                    {
+                        var lastRecord = unit.GetComponent<UnitFrameRecordComponent>().AllFrames[lastServerFrame - 1];
+                        if (lastRecord != null)
+                        {
+                            recordPos = lastRecord.Pos;
+                            recordDir = lastRecord.Dir;
+                        }
+
+                        if (v.Pos != null)
+                        {
+                            recordPos = v.Pos.ToV3();
+                        }
+
+                        if (v.Dir != null)
+                        {
+                            recordDir = v.Dir.ToV3();
+                        }
+                    }
+
+                    unit.GetComponent<UnitFrameRecordComponent>().AddRecord(lastServerFrame, recordPos, recordDir);
+
                 }
-                else
-                {
-                    var lastRecord = unit.GetComponent<UnitFrameRecordComponent>().AllFrames[lastServerFrame - 1];
-                    if (lastRecord != null)
-                    {
-                        recordPos = lastRecord.Pos;
-                        recordDir = lastRecord.Dir;
-                    }
-
-                    if (v.Pos != null)
-                    {
-                        recordPos = v.Pos.ToV3();
-                    }
-
-                    if (v.Dir != null)
-                    {
-                        recordDir = v.Dir.ToV3();
-                    }
-                }
-
-                unit.GetComponent<UnitFrameRecordComponent>().AddRecord(lastServerFrame, recordPos, recordDir);
-
             }
+            else
+            {
+                myUnit.GetComponent<UnitFrameRecordComponent>().AddRecord(lastServerFrame, myUnit.Position, myUnit.Forward);
+            }
+
             com.Transforms.Clear();
             //3.todo 更新数值和各种状态
-            //4.确定是否有预测错误, 如果有错误,则回滚自己(获取回到正确时间的位置,然后重新执行所有输入,直到当前(上一帧))
-            var myUnit = com.Domain.GetComponent<UnitComponent>().MyUnit;
+            //4.确定是否有预测错误,进行预测错误的处理
+
             if (com.MoveInputResult != null && !com.MoveInputResult.Vaild)
             {
                 var record = myUnit.GetComponent<UnitFrameRecordComponent>().AllFrames[lastServerFrame];
+
+                var targetPos = myUnit.Position;
+                var targetDir = myUnit.Forward;
+                
                 myUnit.Position = record.Pos;
                 myUnit.Forward = record.Dir;
                 var speed = myUnit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
-                for (int i = lastServerFrame; i < com.GetCurrSimulateFrame(); i++)
-                {
-                    void CheckMove()
-                    {
-                        //todo: 判断这时候禁止移动buff是否还在,在的话就不管
-                        var input = myUnit.GetComponent<UnitFrameInputComponent>().AllInputs[i];
-                        if(input == null) return;
-                        var inputMove = input.GetComponent<FrameInput_Move>();
-                        if(inputMove == null) return;
-                    
-                        myUnit.GetComponent<FrameMoveComponent>().MoveToAsync(inputMove.Path,speed,true,i).Coroutine();  
-                    }
+                
+                // 有两种方案
+                // 1. 回滚到服务器确认的帧位置,然后重播所有到现在的输入,计算一个最终的位置和角度
+                // 2. 以当前位置为玩家期望位置,从服务器确认的帧位置往当前期望位置插值 (当前采用的. 因为每次发给服务器的移动输入的时候,其实传入的就是期望位置)
 
-                    CheckMove();
-                    myUnit.GetComponent<FrameMoveComponent>().MoveForward(false,i);
- 
+                var path = myUnit.CalPath(targetPos);
+                if (path != null)
+                {
+                    myUnit.GetComponent<FrameMoveComponent>().Simulate(path, speed,lastServerFrame);
+                    for (int i = lastServerFrame + 1; i < com.GetCurrSimulateFrame(); i++)
+                    {
+                        myUnit.GetComponent<FrameMoveComponent>().RunNext(i);
+                    }
                 }
+
             }
 
             com.MoveInputResult = null;

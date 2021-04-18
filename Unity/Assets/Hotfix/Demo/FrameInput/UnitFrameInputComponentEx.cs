@@ -39,6 +39,7 @@ namespace ET
             var move = frameInput.AddComponent<FrameInput_Move>();
             move.Target = target;
             move.Path.AddRange(path);
+            self.AllInputs[frame] = frameInput;
             return frameInput;
         }
     }

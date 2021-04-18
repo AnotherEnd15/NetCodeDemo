@@ -1,24 +1,20 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace ET
 {
     public static class MoveHelper
     {
-        // 可以多次调用，多次调用的话会取消上一次的协程
-        public static async ETTask<int> MoveToAsync(this Unit unit, Vector3 targetPos, ETCancellationToken cancellationToken = null)
+        public static List<Vector3> CalPath(this Unit unit, Vector3 targetPos)
         {
-            C2M_PathfindingResult msg = new C2M_PathfindingResult();
-            unit.Domain.GetComponent<SessionComponent>().Session.Send(msg);
-
-            ObjectWait objectWait = unit.GetComponent<ObjectWait>();
-            
-            // 要取消上一次的移动协程
-            objectWait.Notify(new WaitType.Wait_UnitStop() { Error = WaitTypeError.Cancel });
-            
-            // 一直等到unit发送stop
-            WaitType.Wait_UnitStop waitUnitStop = await objectWait.Wait<WaitType.Wait_UnitStop>();
-            return waitUnitStop.Error;
+            var path = new NavMeshPath();
+            UnityEngine.AI.NavMesh.CalculatePath(unit.Position, targetPos, NavMesh.AllAreas, path);
+            if (path.corners == null
+                || path.corners.Length <= 1)
+                return null;
+            return path.corners.ToList();
         }
     }
 }

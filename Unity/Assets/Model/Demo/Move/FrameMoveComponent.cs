@@ -4,79 +4,19 @@ using UnityEngine;
 
 namespace ET
 {
+    // 客户端主角的移动组件,要带有预测
     public class FrameMoveComponent: Entity
     {
-        public Vector3 PreTarget
-        {
-            get
-            {
-                return this.Targets[this.N - 1];
-            }
-        }
+        public Vector3 MoveTarget; // 当前目标
+        public Vector3 StartPos; // 本次移动最开始的点
 
-        public Vector3 NextTarget
-        {
-            get
-            {
-                return this.Targets[this.N];
-            }
-        }
-
-        // 开启移动协程的时间
-        public long BeginTime;
-
-        // 每个点的开始时间
-        public long StartTime { get; set; }
-
-        // 开启移动协程的Unit的位置
-        public Vector3 StartPos;
-
-        public Vector3 RealPos
-        {
-            get
-            {
-                return this.Targets[0];
-            }
-        }
-
-        private long needTime;
-
-        public long NeedTime
-        {
-            get
-            {
-                return this.needTime;
-            }
-            set
-            {
-                this.needTime = value;
-            }
-        }
-
-        public long MoveTimer;
-
-        public float Speed; // m/s
-
-        public Action<bool> Callback;
-
-        public List<Vector3> Targets = new List<Vector3>();
-
-        public Vector3 FinalTarget
-        {
-            get
-            {
-                return this.Targets[this.Targets.Count - 1];
-            }
-        }
-
-        public int N;
-
-        public int TurnTime;
-
-        public bool IsTurnHorizontal;
-
-        public Quaternion From;
-
-        public Quaternion To;
+        public List<Vector3> CurrPath =new List<Vector3>(); 
+        public int CurrPathIndex; // 当前路径第几个目标点, 第0点就是自己当前位置,所以为0的时候代表不移动
+        public int StartMoveFrame; // 开始移动的帧
+        public int NeedFrame; // 预计需要多少帧到达
+        public int CurrFrame; // 主角的话,就是当前预测帧,其他人,就是服务器确认帧
+        public int LastFrame;// 上一帧, 主要用来判断不继续模拟的情况
+        public float Speed; // 当前移动的速度
+        public ETTaskCompletionSource<MoveStopError> MoveTcs;
     }
 }

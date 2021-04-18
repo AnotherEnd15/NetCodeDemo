@@ -34,6 +34,10 @@
       <Link>Demo\CircularList.cs</Link>
     </Compile>
 
+    <Compile Include="..\..\Unity\Assets\Model\Demo\Move\MoveStopError.cs">
+      <Link>Demo\Move\MoveStopError.cs</Link>
+    </Compile>
+
     <Compile Include="..\..\Unity\Assets\Model\Demo\Unit\UnitType.cs">
       <Link>Demo\Unit\UnitType.cs</Link>
     </Compile>
