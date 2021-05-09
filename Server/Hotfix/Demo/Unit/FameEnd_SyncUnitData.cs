@@ -23,10 +23,12 @@ namespace ET
             };
             foreach (var v in unit.GetAOIPlayers())
             {
-                if(v.Id == unit.Id) continue; //todo: 自己的不直接同步给自己,走预测-回滚那一套
                 var diryCom = v.GetComponent<UnitDiryDataComponent>();
                 diryCom.Transforms.Add(proto);
             }
+
+            com.DirtyPos = false;
+            com.DirtyRot = false;
         }
 
         void HandleInput(Unit unit)
@@ -40,6 +42,7 @@ namespace ET
                 {
                     diryCom.MoveInputResultProto = new MoveInputProto();
                     diryCom.MoveInputResultProto.Vaild = com.ValidMove;
+                    diryCom.MoveInputResultProto.ClientFrame = com.ClientFrame;
                     if (com.ValidMove)
                         diryCom.MoveInputResultProto.Target = com.MoveTarget.ToOpV3();
                 }

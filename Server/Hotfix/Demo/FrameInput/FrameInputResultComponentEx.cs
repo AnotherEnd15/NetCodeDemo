@@ -20,13 +20,15 @@ namespace ET
             self.ValidMove = default;
             self.MoveTarget = default;
             self.HasMoveInput = default;
+            self.ClientFrame = 0;
         }
 
-        public static void SetMove(this FrameInputResultComponent self, bool valid, Vector3 target)
+        public static void SetMove(this FrameInputResultComponent self,int clientFrame, bool valid, Vector3 target)
         {
             self.ValidMove = valid;
             self.MoveTarget = target;
             self.HasMoveInput = true;
+            self.ClientFrame = clientFrame;
         }
         
     }

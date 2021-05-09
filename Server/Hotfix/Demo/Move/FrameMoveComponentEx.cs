@@ -67,7 +67,7 @@ namespace ET
             self.StartMoveFrame = self.CurrFrame;
             self.StartPos = unit.Position;
             var realTime = Vector3.Distance(currTarget, unit.Position) / self.Speed;
-            self.NeedFrame = (int) (realTime * 1000 / Game.ClientFrameDuration);
+            self.NeedFrame = (int) (realTime * 1000 / Game.ServerFrameDuration);
         }
 
         public static void Stop(this FrameMoveComponent self, MoveStopError stopError)

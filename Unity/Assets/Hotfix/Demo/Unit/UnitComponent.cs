@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EventIDType;
 
 namespace ET
 {
@@ -26,10 +27,13 @@ namespace ET
 	
 	public static class UnitComponentSystem
 	{
-		public static void Add(this UnitComponent self, Unit unit)
+		public static void Add(this UnitComponent self, Unit unit, bool isMyUnit = false)
 		{
 			self.idUnits.Add(unit.Id, unit);
 			unit.Parent = self;
+			if (isMyUnit)
+				self.MyUnit = unit;
+			Game.EventSystem.Publish(new EventIDType.AfterUnitCreate() { Unit = unit });
 		}
 
 		public static Unit Get(this UnitComponent self, long id)
@@ -43,6 +47,11 @@ namespace ET
 		{
 			Unit unit;
 			self.idUnits.TryGetValue(id, out unit);
+			if (unit != null)
+			{
+				Game.EventSystem.Publish(new UnitRemove() { Unit = unit });
+			}
+
 			self.idUnits.Remove(id);
 			unit?.Dispose();
 		}

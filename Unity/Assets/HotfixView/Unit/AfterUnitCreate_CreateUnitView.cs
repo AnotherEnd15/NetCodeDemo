@@ -18,4 +18,16 @@ namespace ET
             await ETTask.CompletedTask;
         }
     }
+    
+    public class UnitRemove_CreateUnitView: AEvent<EventIDType.UnitRemove>
+    {
+        protected override async ETTask Run(EventIDType.UnitRemove args)
+        {
+            // Unit View层
+            // 这里可以改成异步加载，demo就不搞了
+            var tarGo = args.Unit.GetComponent<GameObjectComponent>().GameObject;
+            GameObject.Destroy(tarGo);
+            await ETTask.CompletedTask;
+        }
+    }
 }

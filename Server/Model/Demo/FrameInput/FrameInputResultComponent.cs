@@ -8,5 +8,6 @@ namespace ET
         public Vector3 MoveTarget;
         public bool ValidMove;
         public bool HasMoveInput;
+        public int ClientFrame;
     }
 }

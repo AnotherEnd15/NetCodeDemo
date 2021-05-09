@@ -7,9 +7,9 @@
             return entity.Domain.GetComponent<SceneFrameManagerComponent>().CurrSimulateFrame;
         }
         
-        public static int GetLastServerFrame(this Entity entity)
+        public static int GetSimulateServerFrame(this Entity entity)
         {
-            return entity.Domain.GetComponent<SceneFrameManagerComponent>().LastServerFrame;
+            return entity.Domain.GetComponent<SceneFrameManagerComponent>().SimulateServerFrame;
         }
 
         public static void SetServerFrame(Entity entity,int serverFrame)

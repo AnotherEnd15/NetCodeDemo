@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Serializers;
-using UnityEditor.UI;
 using UnityEngine;
 
 namespace ET
@@ -11,18 +10,24 @@ namespace ET
             self.MoveInputResult = null;
             self.Transforms.Clear();
             self.Units.Clear();
-            
+            self.RemoveUnits.Clear();
         }
 
         public static void Handle(this SceneDirtyDataComponent com)
         {
-            var lastServerFrame = com.GetLastServerFrame();
-            //1. 先创建Unit
+            var lastServerFrame = com.Domain.GetComponent<SceneFrameManagerComponent>().LastServerFrame;
+            //1. 先创建Unit, 删除Unit
             foreach (var v in com.Units)
             {
                 UnitFactory.Create(com.Domain, v, com.MyUnitId);
             }
             com.Units.Clear();
+            foreach (var v in com.RemoveUnits)
+            {
+                com.Domain.GetComponent<UnitComponent>().Remove(v);
+            }
+            com.RemoveUnits.Clear();
+            
             var myUnit = com.Domain.GetComponent<UnitComponent>().MyUnit;
             if (com.Transforms.Count > 0)
             {
@@ -76,29 +81,33 @@ namespace ET
 
             if (com.MoveInputResult != null && !com.MoveInputResult.Vaild)
             {
-                var record = myUnit.GetComponent<UnitFrameRecordComponent>().AllFrames[lastServerFrame];
-
-                var targetPos = myUnit.Position;
-                var targetDir = myUnit.Forward;
-                
-                myUnit.Position = record.Pos;
-                myUnit.Forward = record.Dir;
-                var speed = myUnit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
-                
-                // 有两种方案
-                // 1. 回滚到服务器确认的帧位置,然后重播所有到现在的输入,计算一个最终的位置和角度
-                // 2. 以当前位置为玩家期望位置,从服务器确认的帧位置往当前期望位置插值 (当前采用的. 因为每次发给服务器的移动输入的时候,其实传入的就是期望位置)
-
-                var path = myUnit.CalPath(targetPos);
-                if (path != null)
+                var targetFrame = com.MoveInputResult.ClientFrame;
+                if (targetFrame >= lastServerFrame)
                 {
-                    myUnit.GetComponent<FrameMoveComponent>().Simulate(path, speed,lastServerFrame);
-                    for (int i = lastServerFrame + 1; i < com.GetCurrSimulateFrame(); i++)
+                    var record = myUnit.GetComponent<UnitFrameRecordComponent>().AllFrames[lastServerFrame];
+
+                    var targetPos = myUnit.Position;
+                    var targetDir = myUnit.Forward;
+
+                    myUnit.Position = record.Pos;
+                    myUnit.Forward = record.Dir;
+                    //todo: 应该要获取当时的速度
+                    var speed = myUnit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
+
+                    // 有两种方案
+                    // 1. 回滚到服务器确认的帧位置,然后重播所有到现在的输入,计算一个最终的位置和角度
+                    // 2. 以当前位置为玩家期望位置,从服务器确认的帧位置往当前期望位置插值 (当前采用的. 因为每次发给服务器的移动输入的时候,其实传入的就是期望位置)
+
+                    var path = myUnit.CalPath(targetPos);
+                    if (path != null)
                     {
-                        myUnit.GetComponent<FrameMoveComponent>().RunNext(i);
+                        myUnit.GetComponent<FrameMoveComponent>().Simulate(path, speed, targetFrame);
+                        for (int i = targetFrame + 1; i < com.GetCurrSimulateFrame(); i++)
+                        {
+                            myUnit.GetComponent<FrameMoveComponent>().RunNext(i);
+                        }
                     }
                 }
-
             }
 
             com.MoveInputResult = null;

@@ -8,7 +8,7 @@
             unit.GetComponent<FrameMoveComponent>().Move(self.Path, speed).Coroutine();
             unit.CurrSession().Send(new C2M_PathfindingResult()
             {
-                Frame = unit.GetCurrSimulateFrame(),
+                ClientFrame = unit.GetCurrSimulateFrame(),
                 Target = self.Target.ToOpV3()
             });
         }

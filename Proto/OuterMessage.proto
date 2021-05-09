@@ -74,7 +74,7 @@ message C2M_PathfindingResult // IActorLocationMessage
 	int64 ActorId = 93;
 	
 	OpVector3 Target = 1;
-	int32 Frame = 2;
+	int32 ClientFrame = 2; // 预测回滚用
 }
 
 message UpdateTransformProto
@@ -93,6 +93,7 @@ message MoveInputProto
 {
 	OpVector3 Target = 1;
 	bool Vaild = 2;
+	int32 ClientFrame = 3; // 是客户端哪帧的输入
 }
 
 message UpdateNumericProto

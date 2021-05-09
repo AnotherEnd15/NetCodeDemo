@@ -20,14 +20,24 @@ namespace ET
             var frameTimerCom = self.Domain.GetComponent<FrameTimerComponent>();
             frameTimerCom.Remove(self.frameTimer);
             self.frameTimer = frameTimerCom.NewRepeatedFrameTimer(1, self.Run);
-            self.StartFrame = self.GetLastServerFrame();
-            self.EndServerFrame =  self.StartFrame+TransformUpdateComponent.UpdateDelayFrame;
+            // 其他人落后1服务器帧开始计算
+            self.StartFrame = self.GetSimulateServerFrame();
+            self.EndServerFrame =  self.StartFrame+ SceneFrameManagerComponent.UpdateDelayFrame;
+            Log.Debug($"其他单位 准备移动 {self.StartFrame}  {self.EndServerFrame}  {self.TargetPos}");
         }
 
         static void Run(this TransformUpdateComponent self)
         {
-            var currFrame = self.GetLastServerFrame();
-            var pos = Vector3.Lerp(self.StartPos, self.TargetPos, currFrame - self.StartFrame / TransformUpdateComponent.UpdateDelayFrame);
+            var currFrame = self.GetSimulateServerFrame();
+            if (currFrame > self.EndServerFrame)
+            {
+                var frameTimerCom = self.Domain.GetComponent<FrameTimerComponent>();
+                frameTimerCom.Remove(self.frameTimer);
+                return;
+            }
+            var pos = Vector3.Lerp(self.StartPos, self.TargetPos,
+                ((float) (currFrame - self.StartFrame)) / SceneFrameManagerComponent.UpdateDelayFrame);
+            //Log.Debug($"其他单位 开始移动 {pos} {self.StartFrame}  {currFrame}");
             self.GetParent<Unit>().Position = pos;
         }
 

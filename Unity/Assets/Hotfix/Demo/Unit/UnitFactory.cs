@@ -23,9 +23,12 @@ namespace ET
 	        if (isMyUnit)
 	        {
 		        unit.AddComponent<UnitFrameInputComponent>();
-		        unit.AddComponent<UnitFrameRecordComponent>();
 	        }
-
+	        else
+	        {
+		        unit.AddComponent<TransformUpdateComponent>();
+	        }
+	        unit.AddComponent<UnitFrameRecordComponent>();
 	        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
 	        for (int i = 0; i < unitInfo.KVs.Count; ++i)
 	        {
@@ -33,13 +36,7 @@ namespace ET
 	        }
 
 	        UnitComponent unitComponent = domain.GetComponent<UnitComponent>();
-            unitComponent.Add(unit);
-            if (isMyUnit)
-            {
-	            unitComponent.MyUnit = unit;
-            }
-
-            Game.EventSystem.Publish(new EventIDType.AfterUnitCreate() {Unit = unit});
+            unitComponent.Add(unit,isMyUnit);
             return unit;
         }
     }

@@ -38,8 +38,13 @@ namespace ET
             if (self.LastServerFrame == 0) return;
             var com = self.ZoneScene().GetComponent<SceneDirtyDataComponent>();
             com.Handle();
-            // 驱动帧时间组件刷新, 世界状态进行变化
-            self.Domain.GetComponent<FrameTimerComponent>().Update(self.LastServerFrame);
+            // 驱动帧时间组件刷新, 世界状态进行变化. 这个是落后服务器2帧的
+            if (self.SimulateServerFrame < self.LastServerFrame - SceneFrameManagerComponent.UpdateDelayFrame)
+            {
+                self.SimulateServerFrame++;
+                self.Domain.GetComponent<FrameTimerComponent>().Update(self.SimulateServerFrame);
+            }
+
             var myUnit = self.Domain.GetComponent<UnitComponent>().MyUnit;
             bool needForecast = self.CurrSimulateFrame < self.LastServerFrame + SceneFrameManagerComponent.MaxForecastFrame;
             //Log.Debug(self.LastServerFrame +"   "+self.CurrSimulateFrame);

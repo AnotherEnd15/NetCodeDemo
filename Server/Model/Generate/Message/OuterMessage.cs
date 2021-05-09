@@ -160,7 +160,7 @@ namespace ET
 		public OpVector3 Target { get; set; }
 
 		[ProtoMember(2)]
-		public int Frame { get; set; }
+		public int ClientFrame { get; set; }
 
 	}
 
@@ -197,6 +197,9 @@ namespace ET
 
 		[ProtoMember(2)]
 		public bool Vaild { get; set; }
+
+		[ProtoMember(3)]
+		public int ClientFrame { get; set; }
 
 	}
 

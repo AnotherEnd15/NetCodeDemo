@@ -51,6 +51,7 @@ namespace ET
             ILog.Trace($"{msg}\n{st}");
         }
 
+        [Conditional("DEBUG")]
         public static void Debug(string msg)
         {
             if (!CheckLogLevel(DebugLevel))
@@ -103,7 +104,7 @@ namespace ET
             ErrorCallback?.Invoke(str);
             ILog.Error(str);
         }
-
+        [Conditional("DEBUG")]
         public static void Trace(string message, params object[] args)
         {
             if (!CheckLogLevel(TraceLevel))
@@ -114,7 +115,7 @@ namespace ET
             StackTrace st = new StackTrace(1, true);
             ILog.Trace($"{string.Format(message, args)}\n{st}");
         }
-
+        [Conditional("DEBUG")]
         public static void Warning(string message, params object[] args)
         {
             if (!CheckLogLevel(WarningLevel))
@@ -132,7 +133,7 @@ namespace ET
             }
             ILog.Info(string.Format(message, args));
         }
-
+        [Conditional("DEBUG")]
         public static void Debug(string message, params object[] args)
         {
             if (!CheckLogLevel(DebugLevel))

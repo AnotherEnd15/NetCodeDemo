@@ -69,6 +69,11 @@ namespace EventIDType
         public Unit Unit;
     }
 
+    public struct UnitRemove
+    {
+        public Unit Unit;
+    }
+
     public struct MoveStart
     {
         public Unit Unit;
