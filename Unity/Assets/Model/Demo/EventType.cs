@@ -1,4 +1,5 @@
-﻿using ET;
+﻿using System;
+using ET;
 
 namespace EventIDType
 {
@@ -12,7 +13,7 @@ namespace EventIDType
     public struct AppStart
     {
     }
-
+    
     public struct ChangePosition
     {
         public Unit Unit;

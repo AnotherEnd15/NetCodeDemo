@@ -28,16 +28,6 @@ namespace ET
             //todo: 做分发
             self.GetComponent<FrameInput_Move>()?.Run(unit);
         }
-
-        public static void CreateFrameInput_Move(this Unit unit,int frameIndex, Vector3 Target, List<Vector3> Path)
-        {
-            var com = unit.GetComponent<UnitFrameInputComponent>();
-            if(com == null)
-                com =  unit.AddComponent<UnitFrameInputComponent>();
-            var frameInput = com.CreateOrGet(frameIndex);
-            var move = frameInput.AddComponent<FrameInput_Move>();
-            move.Path.AddRange(Path);
-            move.Target = Target;
-        }
+        
     }
 }

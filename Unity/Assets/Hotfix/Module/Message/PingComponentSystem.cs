@@ -33,8 +33,8 @@ namespace ET
                     }
 
                     long time2 = TimeHelper.ClientNow();
-                    self.Ping = time2 - time1;
-                    
+                    self.RTT = time2 - time1;
+                    await Game.EventSystem.Publish(new EventIDType.PingChange() { ZoneScene = self.ZoneScene(), Ping = self.RTT });
                     Game.TimeInfo.ServerMinusClientTime = response.Time + (time2 - time1) / 2 - time2;
 
                     await TimerComponent.Instance.WaitAsync(2000);
@@ -58,7 +58,7 @@ namespace ET
     {
         public override void Destroy(PingComponent self)
         {
-            self.Ping = default;
+            self.RTT = default;
         }
     }
 }

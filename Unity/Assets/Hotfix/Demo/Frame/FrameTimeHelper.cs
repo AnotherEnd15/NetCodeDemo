@@ -15,13 +15,24 @@
         public static void SetServerFrame(Entity entity,int serverFrame)
         {
             var com = entity.Domain.GetComponent<SceneFrameManagerComponent>();
-            com.LastServerFrame = serverFrame;
-            // 计算模拟的开始帧
-            var pingCom = entity.CurrSession().GetComponent<PingComponent>();
-            var deltaFrame = pingCom.Ping / Game.ClientFrameDuration + 1;
-            var minSimulateFrame = com.LastServerFrame + (int)deltaFrame;
-            if (com.CurrSimulateFrame < minSimulateFrame)
+            if (com.LastServerFrame == 0)
+            {
+                com.LastServerFrame = serverFrame;
+                // 计算模拟的开始帧
+                var pingCom = entity.CurrSession().GetComponent<PingComponent>();
+                var deltaFrame = (pingCom.RTT + Game.ServerFrameDuration) / Game.ClientFrameDuration;
+                Log.Debug($"当前多模拟帧数 {deltaFrame} RTT {pingCom.RTT}");
+                var minSimulateFrame = com.LastServerFrame + (int)deltaFrame;
                 com.CurrSimulateFrame = minSimulateFrame;
+            }
+            else
+            {
+                com.LastServerFrame = serverFrame;
+                if (com.CurrSimulateFrame < com.LastServerFrame)
+                    com.CurrSimulateFrame = com.LastServerFrame;
+            }
+
+          
         }
     }
 }

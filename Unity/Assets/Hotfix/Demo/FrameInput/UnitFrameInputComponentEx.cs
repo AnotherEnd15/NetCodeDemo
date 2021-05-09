@@ -32,10 +32,10 @@ namespace ET
         {
             int frame = self.GetCurrSimulateFrame() + 1;
             var frameInput = self.CreateOrGet(frame);
+            frameInput.RemoveComponent<FrameInput_Move>();
             var move = frameInput.AddComponent<FrameInput_Move>();
             move.Target = target;
             move.Path.AddRange(path);
-            self.AllInputs[frame] = frameInput;
             return frameInput;
         }
     }

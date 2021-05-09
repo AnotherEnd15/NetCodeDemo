@@ -10,7 +10,6 @@ namespace ET
             // 服务器一帧展开来是客户端的3帧
             var clientFrame =  (Game.ServerFrameDuration / Game.ClientFrameDuration) * message.Frame  - 1;
             FrameTimeHelper.SetServerFrame(session, (int) clientFrame);
-
             var com = session.ZoneScene().GetComponent<SceneDirtyDataComponent>();
             com.Units.AddRange(message.Units);
             if (message.Transforms.Count > 0)

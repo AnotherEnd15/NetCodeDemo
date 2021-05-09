@@ -55,5 +55,23 @@ namespace ET
 		{
 			Game.Close();
 		}
+
+		private void OnGUI()
+		{
+			if (ZoneSceneManagerComponent.Instance == null) return;
+			if (!ZoneSceneManagerComponent.Instance.ZoneScenes.TryGetValue(1, out var gameScene))
+			{
+				return;
+			}
+
+			if (gameScene.GetComponent<SessionComponent>() == null)
+				return;
+			var com = gameScene.GetComponent<SessionComponent>().Session.GetComponent<PingComponent>();
+			if (com == null)
+				return;
+			var ping = com.RTT;
+			GUI.color = Color.green;
+			GUILayout.Label("Ping: \n\t"+ ping.ToString(),GUILayout.Width(200),GUILayout.Height(100));
+		}
 	}
 }
