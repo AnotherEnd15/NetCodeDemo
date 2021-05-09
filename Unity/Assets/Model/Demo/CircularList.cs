@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ET
 {
-    public class CircularList<T> where T: IDisposable
+    public class   CircularList<T> where T: IDisposable
     {
         private readonly T[] _list;
         private int _maxIndex;
@@ -51,9 +51,10 @@ namespace ET
         {
             get
             {
-                if (index < this.MinIndex())
+                if (index < this.MinIndex()
+                    || index > this._maxIndex)
                 {
-                    return default(T);
+                    return default (T);
                 }
 
                 var i = index % this._capacity;
@@ -66,9 +67,25 @@ namespace ET
                     return;
                 }
 
-                var i = index % this._capacity;
-                if (index > _maxIndex)
+                if (index > 10 * 10000 * 10000)
                 {
+                    throw new Exception("索引太大了, 检查是否有代码错误");
+                }
+
+                var i = index % this._capacity;
+                if (index > _maxIndex + this._capacity)
+                {
+                    this.Clear();
+                    this._maxIndex = index;  
+                }
+                else if (index > this._maxIndex)
+                {
+                    // 触发了边界移动,删除之前的记录
+                    for (int j = this.MinIndex(); j < this.MinIndex() + index - this._maxIndex; j++)
+                    {
+                        this[j]?.Dispose();
+                        this[j] = default (T);
+                    }
                     this._maxIndex = index;
                 }
 

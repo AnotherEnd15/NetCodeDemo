@@ -7,7 +7,8 @@ namespace ET
     {
         protected override async ETVoid Run(Session session, M2C_UpdateFrame message)
         {
-            var clientFrame = (long)message.Frame * Game.ServerFrameDuration / Game.ClientFrameDuration;
+            // 服务器一帧展开来是客户端的3帧
+            var clientFrame =  (Game.ServerFrameDuration / Game.ClientFrameDuration) * message.Frame  - 1;
             FrameTimeHelper.SetServerFrame(session, (int) clientFrame);
 
             var com = session.ZoneScene().GetComponent<SceneDirtyDataComponent>();

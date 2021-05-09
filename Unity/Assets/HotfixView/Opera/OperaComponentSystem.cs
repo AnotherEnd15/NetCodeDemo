@@ -50,8 +50,9 @@ namespace ET
                     if (self.Path.corners == null
                         || self.Path.corners.Length <= 1)
                         return;
-                    Log.Debug("创建输入 " + self.Path.corners.Length);
-                    unit.GetComponent<UnitFrameInputComponent>().CreateInput_Move(self.Path.corners[0], self.Path.corners.ToList());
+                    var target = self.Path.corners.Last();
+                    Log.Debug($"移动输入 {target}");
+                    unit.GetComponent<UnitFrameInputComponent>().CreateInput_Move(self.Path.corners.Last(), self.Path.corners.ToList());
 
                 }
             }

@@ -1,4 +1,6 @@
-﻿namespace ET
+﻿using System;
+
+namespace ET
 {
     [ObjectSystem]
     public class SceneFrameManagerComponentDestroySystem: DestroySystem<SceneFrameManagerComponent>
@@ -29,9 +31,15 @@
 
     public static class SceneFrameManagerComponentEx
     {
+        public static void AddFrame(this SceneFrameManagerComponent self)
+        {
+            // 要限制一局游戏不能持续超过1年,正常来讲应该不会. 否则会超出21亿
+            self.CurrFrame++;
+        }
+
         public static void RunNextFrame(this SceneFrameManagerComponent self)
         {
-            self.CurrFrame++;
+            self.AddFrame();
             //1.从输入缓冲区中获取所有人的当前输入并处理, 
             //todo 本地模拟的时候是提前模拟的 (提前1/2 RTT + 1帧),所以这里应该能找到当前帧的输入,找不到就忽略(或者考虑复制之前的输入)
             

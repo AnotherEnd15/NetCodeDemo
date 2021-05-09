@@ -237,6 +237,9 @@ namespace ET
 		[ProtoMember(6)]
 		public List<UnitInfo> Units = new List<UnitInfo>();
 
+		[ProtoMember(7)]
+		public List<long> RemoveUnits = new List<long>();
+
 	}
 
 	[ResponseType(typeof(G2C_Ping))]

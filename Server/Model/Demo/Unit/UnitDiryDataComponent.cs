@@ -8,5 +8,6 @@ namespace ET
         public MoveInputProto MoveInputResultProto;
         public List<UpdateNumericProto> Numerics = new List<UpdateNumericProto>();
         public List<UnitInfo> Units = new List<UnitInfo>();
+        public List<long> RemoveUnits = new List<long>();
     }
 }

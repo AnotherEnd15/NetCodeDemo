@@ -21,7 +21,7 @@ namespace ET
             return component;
         }
 		
-        private Entity CreateWithComponentParent(Type type, bool isFromPool = true)
+        private Entity CreateWithComponentParent(Type type, bool isFromPool = false)
         {
             Entity component = Create(type, isFromPool);
 			
@@ -32,7 +32,7 @@ namespace ET
             return component;
         }
 
-        private T CreateWithComponentParent<T>(bool isFromPool = true) where T : Entity
+        private T CreateWithComponentParent<T>(bool isFromPool = false) where T : Entity
         {
             Type type = typeof (T);
             Entity component = Create(type, isFromPool);
@@ -44,7 +44,7 @@ namespace ET
             return (T)component;
         }
 
-        private T CreateWithComponentParent<T, A>(A a, bool isFromPool = true) where T : Entity
+        private T CreateWithComponentParent<T, A>(A a, bool isFromPool = false) where T : Entity
         {
             Type type = typeof (T);
             Entity component = Create(type, isFromPool);
@@ -56,7 +56,7 @@ namespace ET
             return (T)component;
         }
 
-        private T CreateWithComponentParent<T, A, B>(A a, B b, bool isFromPool = true) where T : Entity
+        private T CreateWithComponentParent<T, A, B>(A a, B b, bool isFromPool = false) where T : Entity
         {
             Type type = typeof (T);
             Entity component = Create(type, isFromPool);
@@ -68,7 +68,7 @@ namespace ET
             return (T)component;
         }
 
-        private T CreateWithComponentParent<T, A, B, C>(A a, B b, C c, bool isFromPool = true) where T : Entity
+        private T CreateWithComponentParent<T, A, B, C>(A a, B b, C c, bool isFromPool = false) where T : Entity
         {
             Type type = typeof (T);
             Entity component = Create(type, isFromPool);

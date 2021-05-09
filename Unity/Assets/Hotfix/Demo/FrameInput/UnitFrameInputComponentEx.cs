@@ -16,20 +16,16 @@ namespace ET
     {
         public static FrameInput CreateOrGet(this UnitFrameInputComponent self, int frame)
         {
-            if (!self.Children.TryGetValue(frame,out var Input))
+            if (self.AllInputs[frame] == null)
             {
-                Input = EntityFactory.CreateWithParentAndId<FrameInput>(self, frame);
+                self.AllInputs[frame] = EntityFactory.CreateWithParentAndId<FrameInput>(self, frame);
             }
-            return Input as FrameInput;
+            return self.AllInputs[frame];
         }
 
         public static void Handle(this UnitFrameInputComponent self,int frame)
         {
-            if (!self.Children.TryGetValue(frame, out var Input))
-            {
-                return;
-            }
-            (Input as FrameInput).Run();
+            self.AllInputs[frame]?.Run();
         }
 
         public static FrameInput CreateInput_Move(this UnitFrameInputComponent self,Vector3 target,List<Vector3> path)

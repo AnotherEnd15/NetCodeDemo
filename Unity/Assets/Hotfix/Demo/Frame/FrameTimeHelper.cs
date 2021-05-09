@@ -15,7 +15,6 @@
         public static void SetServerFrame(Entity entity,int serverFrame)
         {
             var com = entity.Domain.GetComponent<SceneFrameManagerComponent>();
-            if (com.LastServerFrame >= serverFrame) return;
             com.LastServerFrame = serverFrame;
             // 计算模拟的开始帧
             var pingCom = entity.CurrSession().GetComponent<PingComponent>();

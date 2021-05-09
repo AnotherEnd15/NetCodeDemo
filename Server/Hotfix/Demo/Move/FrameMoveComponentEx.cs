@@ -39,6 +39,7 @@ namespace ET
             var currTarget = self.CurrPath[self.CurrPathIndex];
             if (self.CurrFrame >= self.StartMoveFrame + self.NeedFrame)
             {
+                Log.Debug($"Unit 移动结束 Frame{self.CurrFrame}  S {self.StartMoveFrame} N {self.NeedFrame} \n S {self.StartPos} C {currTarget} P {unit.Position}");
                 //本次移动结束
                 unit.Position = currTarget;
                 // 最后一个点的处理
@@ -55,7 +56,7 @@ namespace ET
             // 开始移动
             var target = Vector3.Lerp(self.StartPos, currTarget, ((float) (self.CurrFrame - self.StartMoveFrame)) / self.NeedFrame);
             unit.Position = target;
-
+            //Log.Debug($"Unit 移动中 S {self.StartPos} C {currTarget} P {unit.Position} \n C {self.CurrFrame} S {self.StartMoveFrame} N {self.NeedFrame}");
         }
 
         static void SetNextTarget(this FrameMoveComponent self)
@@ -66,7 +67,7 @@ namespace ET
             self.StartMoveFrame = self.CurrFrame;
             self.StartPos = unit.Position;
             var realTime = Vector3.Distance(currTarget, unit.Position) / self.Speed;
-            self.NeedFrame = (int) (realTime / Game.ClientFrameDuration);
+            self.NeedFrame = (int) (realTime * 1000 / Game.ClientFrameDuration);
         }
 
         public static void Stop(this FrameMoveComponent self, MoveStopError stopError)

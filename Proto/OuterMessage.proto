@@ -109,7 +109,8 @@ message M2C_UpdateFrame // IActorMessage
 	repeated UpdateTransformProto Transforms = 3; // 周围人更新位置的信息
 	UpdateInputResultProto InputResult = 4; // 自己的输入结果信息
 	repeated UpdateNumericProto Numerics = 5; // 周围人的数值更新信息
-	repeated UnitInfo Units = 6; // 周围人的Unit创建消息
+	repeated UnitInfo Units = 6; // 周围Unit创建消息
+	repeated int64 RemoveUnits = 7; // 周围Unit移除的消息
 }
 
 

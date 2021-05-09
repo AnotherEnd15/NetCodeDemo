@@ -9,7 +9,8 @@
 
         public static int ClientFrame2ServerFrame(long clientFrame)
         {
-            return (int) (clientFrame * Game.ClientFrameDuration / Game.ServerFrameDuration);
+            var n = Game.ServerFrameDuration / Game.ClientFrameDuration;
+            return (int) (clientFrame + 1) / n;
         }
     }
 }

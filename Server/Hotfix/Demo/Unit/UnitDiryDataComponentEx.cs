@@ -22,6 +22,7 @@ namespace ET
             self.Transforms.Clear();
             self.MoveInputResultProto = null;
             self.Units.Clear();
+            self.RemoveUnits.Clear();
         }
 
         public static void Handle(this UnitDiryDataComponent self, int CurrFrame)
@@ -37,6 +38,7 @@ namespace ET
                 msg.InputResult.Move = self.MoveInputResultProto;
             }
             msg.Units.AddRange(self.Units);
+            msg.RemoveUnits.AddRange(self.RemoveUnits);
             MessageHelper.SendClient(self.GetParent<Unit>(),msg);
             self.Clear();
         }

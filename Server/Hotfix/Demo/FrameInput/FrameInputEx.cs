@@ -25,6 +25,7 @@ namespace ET
         public static void Run(this FrameInput self)
         {
             var unit = self.Parent.GetParent<Unit>();
+            Log.Debug($"分发输入处理 {self.Id}");
             //todo: 做分发
             self.GetComponent<FrameInput_Move>()?.Run(unit);
         }
@@ -36,6 +37,7 @@ namespace ET
                 com =  unit.AddComponent<UnitFrameInputComponent>();
             var frameInput = com.CreateOrGet(frameIndex);
             com.AllInputs[frameIndex] = frameInput;
+            Log.Debug($"添加帧移动输入 {frameIndex}");
             var move = frameInput.AddComponent<FrameInput_Move>();
             move.Path.AddRange(Path);
             move.Target = Target;

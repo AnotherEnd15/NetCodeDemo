@@ -8,17 +8,20 @@ namespace ET
         // 可以多次调用，多次调用的话会取消上一次的协程
         public static void FindPathMoveToAsync(this Unit unit,int FrameIndex, Vector3 target, ETCancellationToken cancellationToken = null)
         {
-            if (FrameIndex < unit.GetCurrFrame())
+            var nextFrame = unit.GetCurrFrame() + 1;
+            Log.Debug($"Client: {FrameIndex}  Server: {nextFrame}");
+            if (FrameIndex < nextFrame)
             {
-                unit.GetComponent<FrameInputResultComponent>().SetMove(false,default);
+                //客户端因为网络原因,导致上传的输入延迟了,目前是kcp,消息有序到达,那么服务器复制这个输入
+                FrameIndex = nextFrame;
                 return;
             }
-            float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
-            if (speed < 0.001)
-            {
-                unit.GetComponent<FrameInputResultComponent>().SetMove(false,default);
-                return;
-            }
+            // float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
+            // if (speed < 0.001)
+            // {
+            //     unit.GetComponent<FrameInputResultComponent>().SetMove(false,default);
+            //     return;
+            // }
             
             using (var list = ListComponent<Vector3>.Create())
             {
