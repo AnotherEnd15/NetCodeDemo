@@ -22,9 +22,12 @@ Demo for netcode,develop with ET
 1.目前前后端寻路方案不一致,导致没法做服务器验证客户端寻路路径.所以暂时完全相信.以后客户端也改成recast寻路再说.  
 2.需要支持单位移动速度突变  
 3.加入战斗元素,做一下简单的PVP. (有造成伤害,死亡,复活流程)  
-## 演示视频(延迟10~750ms,丢包率10%)
+## 演示视频(延迟10~750ms)
 
-https://user-images.githubusercontent.com/29506629/117576578-13d5a780-b119-11eb-805c-9fccdba5d29a.mp4  
+
+https://user-images.githubusercontent.com/29506629/117681768-0259d180-b1e5-11eb-81be-0334405e3a1d.mp4
+
+
 
 # FAQ  
 Q: 为什么高延迟下其他单位会有看起来比较长的滞后感?   (此处高延迟指A和B双端都是500ms+RTT,下同)  
