@@ -162,6 +162,9 @@ namespace ET
 		[ProtoMember(2)]
 		public int ClientFrame { get; set; }
 
+		[ProtoMember(3)]
+		public List<OpVector3> Path = new List<OpVector3>();
+
 	}
 
 	[Message(OuterOpcode.UpdateTransformProto)]

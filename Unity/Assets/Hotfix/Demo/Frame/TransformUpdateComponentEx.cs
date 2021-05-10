@@ -21,7 +21,7 @@ namespace ET
             frameTimerCom.Remove(self.frameTimer);
             self.frameTimer = frameTimerCom.NewRepeatedFrameTimer(1, self.Run);
             // 其他人落后1服务器帧开始计算
-            self.StartFrame = self.GetSimulateServerFrame();
+            self.StartFrame = self.GetSimulateServerFrame() + 1;
             self.EndServerFrame =  self.StartFrame+ SceneFrameManagerComponent.UpdateDelayFrame;
             Log.Debug($"其他单位 准备移动 {self.StartFrame}  {self.EndServerFrame}  {self.TargetPos}");
         }

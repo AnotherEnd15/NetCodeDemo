@@ -48,7 +48,8 @@ namespace ET
                     self.Path.ClearCorners();
                     UnityEngine.AI.NavMesh.CalculatePath(unit.Position, self.ClickPoint, NavMesh.AllAreas, self.Path);
                     if (self.Path.corners == null
-                        || self.Path.corners.Length <= 1)
+                        || self.Path.corners.Length <= 1
+                        || self.Path.corners.Length>=30)
                         return;
                     var target = self.Path.corners.Last();
                     Log.Debug($"移动输入 {target}");

@@ -45,6 +45,27 @@ namespace ET
             GetRecastPathProcessor(mapId).CalculatePath(from, to, result);
         }
 
+        public bool IsValid(int mapId, List<OpVector3> path)
+        {
+            var pro = GetRecastPathProcessor(mapId);
+            List<Vector3> Result = new List<Vector3>();
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                Result.Clear();
+                var pos1 = path[i];
+                var pos2 = path[i + 1];
+                pro.CalculatePath(new Vector3(pos1.X,pos1.Y,pos1.Z),new Vector3(pos2.X,pos2.Y,pos2.Z),Result);
+                if (Result.Count != 2)
+                {
+                    //todo: 根据结果,确定误差是否在可接受范围内
+                    Log.Debug($"路径检测失败 Index:{i} {MongoHelper.ToJson(pos1)} {MongoHelper.ToJson(pos2)}");
+                    return false;   
+                }
+            }
+
+            return true;
+        }
+
         public RecastPathProcessor GetRecastPathProcessor(int mapId)
         {
             if (this.m_RecastPathProcessorDic.TryGetValue(mapId, out var recastPathProcessor))

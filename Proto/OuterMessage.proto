@@ -75,6 +75,7 @@ message C2M_PathfindingResult // IActorLocationMessage
 	
 	OpVector3 Target = 1;
 	int32 ClientFrame = 2; // 预测回滚用
+	repeated OpVector3 Path = 3; // 客户端自己预测的路径
 }
 
 message UpdateTransformProto

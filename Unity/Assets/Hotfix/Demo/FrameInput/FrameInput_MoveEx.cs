@@ -6,11 +6,12 @@
         {
             var speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
             unit.GetComponent<FrameMoveComponent>().Move(self.Path, speed).Coroutine();
-            unit.CurrSession().Send(new C2M_PathfindingResult()
+            var msg = new C2M_PathfindingResult() { ClientFrame = unit.GetCurrSimulateFrame(), Target = self.Target.ToOpV3() };
+            foreach (var v in self.Path)
             {
-                ClientFrame = unit.GetCurrSimulateFrame(),
-                Target = self.Target.ToOpV3()
-            });
+                msg.Path.Add(v.ToOpV3());
+            }
+            unit.CurrSession().Send(msg);
         }
         
     }
