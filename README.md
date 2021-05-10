@@ -27,6 +27,6 @@ Demo for netcode,develop with ET
 https://user-images.githubusercontent.com/29506629/117576578-13d5a780-b119-11eb-805c-9fccdba5d29a.mp4  
 
 # FAQ  
-Q: 为什么高延迟下其他单位会有看起来比较长的滞后感?   (此处高延迟指A和B双端都是500ms+RTT,下同)
+Q: 为什么高延迟下其他单位会有看起来比较长的滞后感?   (此处高延迟指A和B双端都是500ms+RTT,下同)  
 A: 因为这种高延迟下,自己本机虽然即时响应,但是服务器收到移动指令已经是250ms+后的事情了.另一端收到其他单位有位置变化,又是250ms+之后去了. 
 
