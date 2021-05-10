@@ -36,8 +36,10 @@ namespace ET
             }
             
             // 开始移动
+            var oldPos = unit.Position;
             var target = Vector3.Lerp(self.StartPos, currTarget, ((float) (self.CurrFrame - self.StartMoveFrame)) / self.NeedFrame);
             unit.Position = target;
+              Log.Debug($"Unit 持续移动 Frame {self.CurrFrame} Len: {(unit.Position - oldPos).magnitude} ");
         }
 
         static void SetNextTarget(this FrameMoveComponent self)

@@ -18,6 +18,7 @@
             if (com.LastServerFrame == 0)
             {
                 com.LastServerFrame = serverFrame;
+                com.SimulateServerFrame = com.LastServerFrame - SceneFrameManagerComponent.UpdateDelayFrame;
                 // 计算模拟的开始帧
                 var pingCom = entity.CurrSession().GetComponent<PingComponent>();
                 var deltaFrame = (pingCom.RTT / 2 + Game.ServerFrameDuration) / Game.ClientFrameDuration;
@@ -28,8 +29,6 @@
             else
             {
                 com.LastServerFrame = serverFrame;
-                if (com.CurrSimulateFrame < com.LastServerFrame)
-                    com.CurrSimulateFrame = com.LastServerFrame;
             }
 
           

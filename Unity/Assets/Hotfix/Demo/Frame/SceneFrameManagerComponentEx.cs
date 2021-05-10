@@ -35,10 +35,12 @@ namespace ET
     {
         public static void RunNextFrame(this SceneFrameManagerComponent self)
         {
-            if (self.LastServerFrame == 0) return;
             var com = self.ZoneScene().GetComponent<SceneDirtyDataComponent>();
+            if (com.CurrServerFrame == 0) return;
+            FrameTimeHelper.SetServerFrame(self, (int) com.CurrServerFrame);
             com.Handle();
             // 驱动帧时间组件刷新, 世界状态进行变化. 这个是落后服务器2帧的
+            // 网络良好时,这个值稳定落后2帧左右.但是网路出现丢包,那么这个值自增速度就可能会落后于lastServerFrame改变速度了
             if (self.SimulateServerFrame < self.LastServerFrame - SceneFrameManagerComponent.UpdateDelayFrame)
             {
                 self.SimulateServerFrame++;
@@ -51,8 +53,9 @@ namespace ET
             // 延迟增加时,lastServerFrame变化速度降低,currSimlateFrame会逐渐接近250ms上限
             // 延迟降低时,lastServerFrame会比currsimluateFrame更快的速度增加
             // 最终self.currSimulateFrame和lastServerFrame保持一个相对稳定的距离
+            
+            //网络出现丢包时, lastServerFrame变化速度有可能超过当前模拟帧数
             bool needForecast = self.CurrSimulateFrame < self.LastServerFrame + SceneFrameManagerComponent.MaxForecastFrame;
-            //Log.Debug(self.LastServerFrame +"   "+self.CurrSimulateFrame);
             //最多模拟帧数
             if (needForecast)
             {
@@ -61,6 +64,7 @@ namespace ET
                 myUnit.GetComponent<UnitFrameInputComponent>().Handle(self.CurrSimulateFrame);
                 myUnit.GetComponent<FrameMoveComponent>()?.RunNext(self.CurrSimulateFrame);
             }
+
 
         }
     }

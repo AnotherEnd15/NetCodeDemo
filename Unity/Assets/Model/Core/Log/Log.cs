@@ -58,6 +58,8 @@ namespace ET
             {
                 return;
             }
+
+            msg = $"{TimeHelper.ClientNow().ToString()}  {msg}";
             DebugCallback?.Invoke(msg, null);
             ILog.Debug(msg);
         }
