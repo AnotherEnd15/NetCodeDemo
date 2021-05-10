@@ -36,9 +36,16 @@ namespace ET
         public static void RunNextFrame(this SceneFrameManagerComponent self)
         {
             var com = self.ZoneScene().GetComponent<SceneDirtyDataComponent>();
-            if (com.CurrServerFrame == 0) return;
-            FrameTimeHelper.SetServerFrame(self, (int) com.CurrServerFrame);
-            com.Handle();
+            while (com.Cache.Count>0)
+            {
+                var msg = com.Cache.Dequeue();
+                // 服务器一帧展开来是客户端的3帧
+                var clientFrame =  (Game.ServerFrameDuration / Game.ClientFrameDuration) * msg.Frame  - 1;
+                FrameTimeHelper.SetServerFrame(self, (int) clientFrame);
+                com.Handle(msg);
+            }
+
+            if (self.LastServerFrame == 0) return;
             // 驱动帧时间组件刷新, 世界状态进行变化. 这个是落后服务器2帧的
             // 网络良好时,这个值稳定落后2帧左右.但是网路出现丢包,那么这个值自增速度就可能会落后于lastServerFrame改变速度了
             if (self.SimulateServerFrame < self.LastServerFrame - SceneFrameManagerComponent.UpdateDelayFrame)

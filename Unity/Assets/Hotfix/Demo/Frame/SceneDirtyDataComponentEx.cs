@@ -5,39 +5,30 @@ namespace ET
 {
     public static class SceneDirtyDataComponentEx
     {
-        public static void Clear(this SceneDirtyDataComponent self)
-        {
-            self.MoveInputResult = null;
-            self.Transforms.Clear();
-            self.Units.Clear();
-            self.RemoveUnits.Clear();
-        }
-
-        public static void Handle(this SceneDirtyDataComponent com)
+        public static void Handle(this SceneDirtyDataComponent com,M2C_UpdateFrame msg)
         {
             var lastServerFrame = com.Domain.GetComponent<SceneFrameManagerComponent>().LastServerFrame;
             //1. 先创建Unit, 删除Unit
-            foreach (var v in com.Units)
+            foreach (var v in msg.Units)
             {
-                UnitFactory.Create(com.Domain, v, com.MyUnitId);
+                UnitFactory.Create(com.Domain, v, msg.MyUnitId);
             }
-            com.Units.Clear();
-            foreach (var v in com.RemoveUnits)
+
+            foreach (var v in msg.RemoveUnits)
             {
                 com.Domain.GetComponent<UnitComponent>().Remove(v);
             }
-            com.RemoveUnits.Clear();
-            
+
             var myUnit = com.Domain.GetComponent<UnitComponent>().MyUnit;
-            if (com.Transforms.Count > 0)
+            if (msg.Transforms.Count > 0)
             {
                 //2.更新状态
-                foreach (var v in com.Transforms)
+                foreach (var v in msg.Transforms)
                 {
                     var unit = com.Domain.GetComponent<UnitComponent>().Get(v.UnitId);
                     Vector3 recordPos = unit.Position;
                     Vector3 recordDir = unit.Forward;
-                    if (v.UnitId != com.MyUnitId)
+                    if (v.UnitId != msg.MyUnitId)
                     {
                         // 延迟动态变化时, 如果lastServerFrame变化速度大于模拟的速度,那么就会让角色看起来在跳跃式前进
                         if (v.Pos != null)
@@ -76,13 +67,15 @@ namespace ET
                 myUnit.GetComponent<UnitFrameRecordComponent>().AddRecord(lastServerFrame, myUnit.Position, myUnit.Forward);
             }
 
-            com.Transforms.Clear();
+
             //3.todo 更新数值和各种状态
             //4.确定是否有预测错误,进行预测错误的处理
 
-            if (com.MoveInputResult != null && !com.MoveInputResult.Vaild)
+            if (msg.InputResult != null && msg.InputResult.Move != null 
+            && !msg.InputResult.Move.Vaild)
             {
-                var targetFrame = com.MoveInputResult.ClientFrame;
+                var moveInput = msg.InputResult.Move;
+                var targetFrame = moveInput.ClientFrame;
                 if (targetFrame >= lastServerFrame)
                 {
                     var record = myUnit.GetComponent<UnitFrameRecordComponent>().AllFrames[lastServerFrame];
@@ -110,12 +103,7 @@ namespace ET
                     }
                 }
             }
-
-            com.MoveInputResult = null;
             
-            
-            com.Clear();
-
         }
     }
 }
