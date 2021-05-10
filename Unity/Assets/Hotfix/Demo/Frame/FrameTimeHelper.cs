@@ -20,7 +20,7 @@
                 com.LastServerFrame = serverFrame;
                 // 计算模拟的开始帧
                 var pingCom = entity.CurrSession().GetComponent<PingComponent>();
-                var deltaFrame = (pingCom.RTT + Game.ServerFrameDuration) / Game.ClientFrameDuration;
+                var deltaFrame = (pingCom.RTT / 2 + Game.ServerFrameDuration) / Game.ClientFrameDuration;
                 Log.Debug($"当前多模拟帧数 {deltaFrame} RTT {pingCom.RTT}");
                 var minSimulateFrame = com.LastServerFrame + (int)deltaFrame;
                 com.CurrSimulateFrame = minSimulateFrame;

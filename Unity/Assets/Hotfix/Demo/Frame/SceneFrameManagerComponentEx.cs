@@ -46,13 +46,18 @@ namespace ET
             }
 
             var myUnit = self.Domain.GetComponent<UnitComponent>().MyUnit;
+            
+            // 目前这样会导致延迟过大时(>250ms) 这个客户端模拟机制退化,
+            // 延迟增加时,lastServerFrame变化速度降低,currSimlateFrame会逐渐接近250ms上限
+            // 延迟降低时,lastServerFrame会比currsimluateFrame更快的速度增加
+            // 最终self.currSimulateFrame和lastServerFrame保持一个相对稳定的距离
             bool needForecast = self.CurrSimulateFrame < self.LastServerFrame + SceneFrameManagerComponent.MaxForecastFrame;
             //Log.Debug(self.LastServerFrame +"   "+self.CurrSimulateFrame);
             //最多模拟帧数
             if (needForecast)
             {
                 self.CurrSimulateFrame++;
-                //7. 从输入缓冲区中获取自己的输入.然后模拟执行
+                // 从输入缓冲区中获取自己的输入.然后模拟执行
                 myUnit.GetComponent<UnitFrameInputComponent>().Handle(self.CurrSimulateFrame);
                 myUnit.GetComponent<FrameMoveComponent>()?.RunNext(self.CurrSimulateFrame);
             }

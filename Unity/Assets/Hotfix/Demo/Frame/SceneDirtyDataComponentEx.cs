@@ -39,6 +39,7 @@ namespace ET
                     Vector3 recordDir = unit.Forward;
                     if (v.UnitId != com.MyUnitId)
                     {
+                        // 延迟动态变化时, 如果lastServerFrame变化速度大于模拟的速度,那么就会让角色看起来在跳跃式前进
                         if (v.Pos != null)
                             unit.GetComponent<TransformUpdateComponent>().SetPosTarget(v.Pos.ToV3());
                         if (v.Dir != null)
